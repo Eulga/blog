@@ -9,10 +9,6 @@ function App() {
   let 글제목배열 = ["남자 코트 추천", "강남 우동 맛집", "파이썬독학"];
   let [글제목, 글제목변경] = useState(글제목배열);
 
-  function 함수() {
-    글제목배열[0] = "여자 코트 추천";
-  }
-
   let [따봉, 따봉변경] = useState(0);
 
   //Destucturing 문법
@@ -30,14 +26,32 @@ function App() {
           ReactBlog
           <span
             onClick={() => {
-              함수();
-              글제목변경(글제목배열);
+              //ley copy = 글제목
+              //state 함수는 내부값이 동일하다 판단되면 재랜더링 해주지 않음
+              //copy에 글제목이 가진 주소가 복제됐기 때문에 state함수가 값이 달라진걸 알 수 없음
+              //배열 복제는 주소저장이 아닌 배열자체를 저장해야함
+              let copy = [...글제목];
+              // ... -> 배열해제
+              // [] -> 배열적용
+
+              copy[0] = "여자 코트 추천";
+
+              글제목변경(copy);
             }}
           >
             🙍‍♀️
           </span>
         </h4>
       </div>
+      <button
+        onClick={() => {
+          let copy = [...글제목];
+          copy.sort();
+          글제목변경(copy);
+        }}
+      >
+        가나다순정렬
+      </button>
       {/* <h4>{post}</h4> */}
       <div className="list">
         <h4>
