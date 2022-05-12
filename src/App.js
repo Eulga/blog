@@ -67,16 +67,52 @@ function App() {
         </h4>
         <p>2월 17일 발행</p>
       </div>
+
       <div className="list">
         <h4>{글제목[1]}</h4>
         <p>2월 17일 발행</p>
       </div>
+
       <div className="list">
         <h4>{글제목[2]}</h4>
         <p>2월 17일 발행</p>
       </div>
+      <Modal></Modal>
+      <ModalEx></ModalEx>
     </div>
   );
+}
+
+//이것도 Component
+const ModalEx = () => {
+  return (
+    <div>
+      <div>제대로 나오나염</div>
+      <div>나옴ㅋ</div>
+    </div>
+  );
+};
+
+//Component
+// 1.반복적인 html 축약할 때
+// 2.큰 페이지들
+// 3.자주변경되는 것들
+function Modal() {
+  return (
+    <div className="modal">
+      <h4>제목</h4>
+      <p>날짜</p>
+      <p>상세내용</p>
+    </div>
+  );
+  // state를 가져다 사용할 때 문제가 발생
+
+  //Fragment
+  //병렬로 태그를 사용해야할 때
+  <>
+    <div></div>
+    <div></div>
+  </>;
 }
 
 export default App;
