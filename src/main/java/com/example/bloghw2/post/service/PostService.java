@@ -16,5 +16,5 @@ public interface PostService {
 
     PostResponseDTO modifyPost(Long postId, PostRequestDTO postRequestDTO, String username);
 
-    Map<String,String> deletePost(Long postId, String password);
+    Map<String,String> deletePost(Long postId, String username);
 }
