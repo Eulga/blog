@@ -25,11 +25,11 @@ public class User {
     private String username;
 
     @Column(nullable = false)
-    private String userPassword;
+    private String password;
 
     @Builder
-    private User(String username, String userPassword) {
+    private User(String username, String password) {
         this.username = username;
-        this.userPassword = userPassword;
+        this.password = password;
     }
 }
