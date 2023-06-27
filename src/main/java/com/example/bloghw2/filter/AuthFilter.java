@@ -27,12 +27,13 @@ public class AuthFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+        httpServletRequest.getMethod();
         String url = httpServletRequest.getRequestURI();
 
         if (StringUtils.hasText(url) &&
-                (url.startsWith("/api/") || url.equals("/"))
+                (url.startsWith("/api/signup") || url.startsWith("/api/login") || (url.startsWith("/api/posts") && httpServletRequest.getMethod().equals("GET")))
         ) {
-            // 회원가입, 로그인 관련 API 는 인증 필요없이 요청 진행
+            // 회원가입, 로그인, 게시글 조회 API 는 인증 필요없이 요청 진행
             chain.doFilter(request, response); // 다음 Filter 로 이동
         } else {
             // 나머지 API 요청은 인증 처리 진행

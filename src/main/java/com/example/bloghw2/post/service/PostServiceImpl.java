@@ -102,7 +102,6 @@ public class PostServiceImpl implements PostService{
         );
 
         // 해당 유저가 쓴 포스트가 맞는지 검사
-        // 해당 유저로 포스트
         Post post = postRepository.findPostByPostIdAndUserId(postId, user.getId()).orElseThrow(
                 () -> new NullPointerException("Not Found Post")
         );
