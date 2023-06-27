@@ -1,4 +1,4 @@
-package com.example.bloghw2.user.config;
+package com.example.bloghw2.global.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
