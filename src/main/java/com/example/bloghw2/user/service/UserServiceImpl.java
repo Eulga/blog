@@ -6,6 +6,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.bloghw2.jwtutil.JwtUtil;
 import com.example.bloghw2.user.dto.BaseResponseDTO;
 import com.example.bloghw2.user.dto.LoginResponseDTO;
 import com.example.bloghw2.user.dto.UserRequestDTO;
@@ -20,6 +21,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
 
     @Transactional
     @Override
@@ -49,8 +51,7 @@ public class UserServiceImpl implements UserService {
         if (!passwordEncoder.matches(rawPassword,user.getPassword())){
             throw new IllegalArgumentException("비밀번호 오류");
         }
-
-        // JWT 헤더로 같이 전송 보류
-        return new LoginResponseDTO("true",200,"jwt");
+        String accessToken = jwtUtil.createToken(username);
+        return new LoginResponseDTO("true",200,accessToken);
     }
 }
