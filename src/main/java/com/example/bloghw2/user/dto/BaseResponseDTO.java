@@ -5,7 +5,11 @@ import lombok.Getter;
 @Getter
 public class BaseResponseDTO {
 
-    private String success;
-    private int status;
+    private final String success;
+    private final int status;
 
+    public BaseResponseDTO(String success, int status) {
+        this.success = success;
+        this.status = status;
+    }
 }
