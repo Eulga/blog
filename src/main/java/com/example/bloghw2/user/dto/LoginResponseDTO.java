@@ -9,11 +9,11 @@ public class LoginResponseDTO {
 
     private int status;
 
-    private String jwt;
+    private String accessToken;
 
-    public LoginResponseDTO(String success, int status, String jwt) {
+    public LoginResponseDTO(String success, int status, String accessToken) {
         this.success = success;
         this.status = status;
-        this.jwt = jwt;
+        this.accessToken = accessToken;
     }
 }
