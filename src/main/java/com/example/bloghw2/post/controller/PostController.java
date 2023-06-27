@@ -59,7 +59,7 @@ public class PostController {
 
     // 게시글 수정
     @PutMapping("/posts/{postId}")
-    public ResponseEntity<PostResponseDTO> modifyPost(@PathVariable("postId") Long postId, @RequestBody PostRequestDTO postRequestDTO
+    public ResponseEntity<PostResponseDTO> modifyPost(@PathVariable("postId") Long postId,@Valid @RequestBody PostRequestDTO postRequestDTO
     , HttpServletRequest req) {
         String username = ((User) req.getAttribute("user")).getUsername();
         PostResponseDTO response = postService.modifyPost(postId, postRequestDTO, username);
@@ -69,8 +69,9 @@ public class PostController {
 
     //게시글 삭제
     @DeleteMapping("/posts/{postId}")
-    public ResponseEntity<Map<String,String>> deletePost(@PathVariable("postId") Long postId, @RequestBody Map<String,String> password){
-        Map<String, String> response = postService.deletePost(postId, password.get("password"));
+    public ResponseEntity<Map<String,String>> deletePost(@PathVariable("postId") Long postId, HttpServletRequest req){
+        String username = ((User) req.getAttribute("user")).getUsername();
+        Map<String, String> response = postService.deletePost(postId, username);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
