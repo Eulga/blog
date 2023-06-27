@@ -1,24 +1,20 @@
 package com.example.bloghw2.post.service;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import com.example.bloghw2.user.entity.User;
-import com.example.bloghw2.user.repository.UserRepository;
-import com.example.bloghw2.user.service.UserService;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.example.bloghw2.post.Exception.PasswordMismatchException;
 import com.example.bloghw2.post.Exception.PostNotFoundException;
 import com.example.bloghw2.post.dto.PostRequestDTO;
 import com.example.bloghw2.post.dto.PostResponseDTO;
 import com.example.bloghw2.post.entity.Post;
 import com.example.bloghw2.post.repository.PostRepository;
-
+import com.example.bloghw2.user.entity.User;
+import com.example.bloghw2.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -37,7 +33,7 @@ public class PostServiceImpl implements PostService{
         );
         Post post = Post.builder()
                 .title(postRequestDTO.getTitle())
-                .contents(postRequestDTO.getTitle())
+                .contents(postRequestDTO.getContents())
                 .user(user)
                 .build();
         Post savedPost = postRepository.save(post);

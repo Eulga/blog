@@ -23,7 +23,6 @@ public class AuthFilter implements Filter {
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
 
-
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
@@ -38,7 +37,10 @@ public class AuthFilter implements Filter {
         } else {
             // 나머지 API 요청은 인증 처리 진행
             // 토큰 확인
-            String tokenValue = jwtUtil.getTokenFromRequest(httpServletRequest);
+            log.info(httpServletRequest.getHeader(JwtUtil.AUTHORIZATION_HEADER));
+
+//            String tokenValue = jwtUtil.getTokenFromRequest(httpServletRequest);
+            String tokenValue = httpServletRequest.getHeader(JwtUtil.AUTHORIZATION_HEADER);
 
             if (StringUtils.hasText(tokenValue)) { // 토큰이 존재하면 검증 시작
                 // JWT 토큰 substring
