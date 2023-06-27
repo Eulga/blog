@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.example.bloghw2.user.entity.User;
+import com.example.bloghw2.user.repository.UserRepository;
+import com.example.bloghw2.user.service.UserService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,17 +25,29 @@ import lombok.RequiredArgsConstructor;
 public class PostServiceImpl implements PostService{
 
     private final PostRepository postRepository;
+    private final UserRepository userRepository;
 
+
+    // 게시글 생성
     @Transactional
     @Override
-    public PostResponseDTO createPost(PostRequestDTO postRequestDTO) {
-        Post post = postRequestDTO.toEntity();
+    public PostResponseDTO createPost(PostRequestDTO postRequestDTO, String username) {
+        User user = userRepository.findByUsername(username).orElseThrow(
+                () -> new NullPointerException("Not Found User")
+        );
+        Post post = Post.builder()
+                .title(postRequestDTO.getTitle())
+                .contents(postRequestDTO.getTitle())
+                .user(user)
+                .build();
         Post savedPost = postRepository.save(post);
 
         PostResponseDTO response = new PostResponseDTO(savedPost);
         return response;
     }
 
+
+    // 게시글 전체 조회
     @Transactional(readOnly = true)
     @Override
     public List<PostResponseDTO> getPosts() {
@@ -44,6 +59,8 @@ public class PostServiceImpl implements PostService{
         return response;
     }
 
+
+    // 게시글 지정 조회
     @Transactional(readOnly = true)
     @Override
     public PostResponseDTO getPost(Long postId) {
@@ -53,29 +70,46 @@ public class PostServiceImpl implements PostService{
         return response;
     }
 
+
+    // 게시글 수정
     @Transactional
     @Override
-    public PostResponseDTO modifyPost(Long postId, PostRequestDTO postRequestDTO) {
-        Post post = postRepository.findById(postId)
-            .orElseThrow(() -> new PostNotFoundException("Post Not Found"));
+    public PostResponseDTO modifyPost(Long postId, PostRequestDTO postRequestDTO, String username) {
+        User user = userRepository.findByUsername(username).orElseThrow(
+                () -> new NullPointerException("Not Found User")
+        );
 
-        if (!post.getPassword().equals(postRequestDTO.getPassword())) {
-            throw new PasswordMismatchException("The entered password does not matched");
-        }
-        post.modifyPost(postRequestDTO.getTitle(), postRequestDTO.getAuthor(), postRequestDTO.getContents());
+        // 해당 유저가 쓴 포스트가 맞는지 검사
+        // 해당 유저로 포스트
+        Post post = postRepository.findPostByPostIdAndUserId(postId, user.getId()).orElseThrow(
+                () -> new NullPointerException("Not Found Post")
+        );
+        post.modifyPost(postRequestDTO.getTitle(), postRequestDTO.getContents());
         PostResponseDTO response = new PostResponseDTO(post);
         return response;
     }
 
+
+    // 게시글 삭제
     @Transactional
     @Override
-    public Map<String,String> deletePost(Long postId, String password) {
-        Post post = postRepository.findById(postId)
-            .orElseThrow(() -> new PostNotFoundException("Post Not Found"));
+    public Map<String,String> deletePost(Long postId, String username) {
+//        Post post = postRepository.findById(postId)
+//            .orElseThrow(() -> new PostNotFoundException("Post Not Found"));
 
-        if (!post.getPassword().equals(password)) {
-            throw new PasswordMismatchException("The entered password does not matched");
-        }
+        User user = userRepository.findByUsername(username).orElseThrow(
+                () -> new NullPointerException("Not Found User")
+        );
+
+        // 해당 유저가 쓴 포스트가 맞는지 검사
+        // 해당 유저로 포스트
+        Post post = postRepository.findPostByPostIdAndUserId(postId, user.getId()).orElseThrow(
+                () -> new NullPointerException("Not Found Post")
+        );
+
+//        if (!post.getPassword().equals(password)) {
+//            throw new PasswordMismatchException("The entered password does not matched");
+//        }
         postRepository.delete(post);
         return Collections.singletonMap("success","true");
     }

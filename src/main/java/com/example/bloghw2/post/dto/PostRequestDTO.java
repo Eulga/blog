@@ -2,32 +2,29 @@ package com.example.bloghw2.post.dto;
 
 import com.example.bloghw2.post.entity.Post;
 
+import com.example.bloghw2.user.entity.User;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
 public class PostRequestDTO {
 
+    @NotBlank(message = "제목은 공백이 불가능 합니다.")
     private final String title;
 
     private final String contents;
 
-    private final String author;
-
-    private final String password;
-
-    public PostRequestDTO(String title, String contents, String author, String password) {
+    public PostRequestDTO(String title, String contents) {
         this.title = title;
         this.contents = contents;
-        this.author = author;
-        this.password = password;
     }
 
     public Post toEntity(){
         return Post.builder()
             .title(title)
             .contents(contents)
-            .author(author)
-            .password(password)
             .build();
     }
 }

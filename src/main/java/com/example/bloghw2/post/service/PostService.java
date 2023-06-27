@@ -8,13 +8,13 @@ import com.example.bloghw2.post.dto.PostResponseDTO;
 
 public interface PostService {
 
-    PostResponseDTO createPost(PostRequestDTO postRequestDTO);
+    PostResponseDTO createPost(PostRequestDTO postRequestDTO, String username);
 
     List<PostResponseDTO> getPosts();
 
     PostResponseDTO getPost(Long postId);
 
-    PostResponseDTO modifyPost(Long postId, PostRequestDTO postRequestDTO);
+    PostResponseDTO modifyPost(Long postId, PostRequestDTO postRequestDTO, String username);
 
     Map<String,String> deletePost(Long postId, String password);
 }
