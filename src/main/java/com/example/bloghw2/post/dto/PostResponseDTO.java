@@ -1,10 +1,9 @@
 package com.example.bloghw2.post.dto;
 
-import java.time.LocalDateTime;
-
 import com.example.bloghw2.post.entity.Post;
-
 import lombok.Getter;
+
+import java.time.LocalDateTime;
 
 @Getter
 public class PostResponseDTO {

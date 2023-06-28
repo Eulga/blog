@@ -1,8 +1,7 @@
-package com.example.bloghw2.global.config.dto;
+package com.example.bloghw2.global.dto;
 
 import lombok.Getter;
 
-import java.util.List;
 import java.util.Map;
 
 @Getter
