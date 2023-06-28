@@ -45,18 +45,6 @@ public class Post {
         this.user = user;
     }
 
-    public static Post createPost(String title, String contents, User user) {
-        return Post.builder()
-                .title(title)
-                .contents(contents)
-                .user(user)
-                .build();
-    }
-
-    private void setUser(User user) {
-        this.user = user;
-    }
-
     public void modifyPost(String title, String contents){
         this.title = title;
         this.contents = contents;
