@@ -16,7 +16,7 @@ import java.io.IOException;
 
 @Slf4j(topic = "AuthFilter")
 @Component
-@Order(1)
+@Order(2)
 @RequiredArgsConstructor
 public class AuthFilter implements Filter {
 
