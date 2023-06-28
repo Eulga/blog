@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.bloghw2.jwtutil.LoginUser;
-import com.example.bloghw2.post.Exception.PasswordMismatchException;
+import com.example.bloghw2.user.Exception.PasswordMismatchException;
 import com.example.bloghw2.post.Exception.PostNotFoundException;
 import com.example.bloghw2.post.dto.PostRequestDTO;
 import com.example.bloghw2.post.dto.PostResponseDTO;
@@ -77,26 +77,5 @@ public class PostController {
         String username = user.getUsername();
         Map<String, String> response = postService.deletePost(postId, username);
         return ResponseEntity.status(HttpStatus.OK).body(response);
-    }
-
-
-    // 예외 관리
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<Map<String,String>> handleException(Exception ex){
-        Map<String, String> result = Collections.singletonMap("success", "false");
-        if (ex instanceof PasswordMismatchException){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(result);
-        } else if (ex instanceof PostNotFoundException){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
-        }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
-    }
-
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String,Object>> handleException(MethodArgumentNotValidException ex, HttpStatus status){
-        Map<String, Object> result = new HashMap<>();
-        result.put("success", "false");
-        result.put("message", ex.getBindingResult().getAllErrors().get(0).getDefaultMessage());
-        return ResponseEntity.status(status.value()).body(result);
     }
 }
