@@ -5,6 +5,7 @@ import com.example.bloghw2.post.dto.PostRequestDTO;
 import com.example.bloghw2.post.dto.PostResponseDTO;
 import com.example.bloghw2.post.entity.Post;
 import com.example.bloghw2.post.repository.PostRepository;
+import com.example.bloghw2.user.Exception.UserNotFoundException;
 import com.example.bloghw2.user.entity.User;
 import com.example.bloghw2.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +30,7 @@ public class PostServiceImpl implements PostService{
     @Override
     public PostResponseDTO createPost(PostRequestDTO postRequestDTO, String username) {
         User user = userRepository.findByUsername(username).orElseThrow(
-                () -> new NullPointerException("Not Found User")
+                () -> new UserNotFoundException("Not Found User")
         );
         Post post = Post.builder()
                 .title(postRequestDTO.getTitle())
@@ -72,13 +73,13 @@ public class PostServiceImpl implements PostService{
     @Override
     public PostResponseDTO modifyPost(Long postId, PostRequestDTO postRequestDTO, String username) {
         User user = userRepository.findByUsername(username).orElseThrow(
-                () -> new NullPointerException("Not Found User")
+                () -> new UserNotFoundException("Not Found User")
         );
 
         // 해당 유저가 쓴 포스트가 맞는지 검사
         // 해당 유저로 포스트
         Post post = postRepository.findPostByPostIdAndUserId(postId, user.getId()).orElseThrow(
-                () -> new NullPointerException("Not Found Post")
+                () -> new PostNotFoundException("Not Found Post")
         );
         post.modifyPost(postRequestDTO.getTitle(), postRequestDTO.getContents());
         PostResponseDTO response = new PostResponseDTO(post);
@@ -94,12 +95,12 @@ public class PostServiceImpl implements PostService{
 //            .orElseThrow(() -> new PostNotFoundException("Post Not Found"));
 
         User user = userRepository.findByUsername(username).orElseThrow(
-                () -> new NullPointerException("Not Found User")
+                () -> new UserNotFoundException("Not Found User")
         );
 
         // 해당 유저가 쓴 포스트가 맞는지 검사
         Post post = postRepository.findPostByPostIdAndUserId(postId, user.getId()).orElseThrow(
-                () -> new NullPointerException("Not Found Post")
+                () -> new PostNotFoundException("Not Found Post")
         );
 
 //        if (!post.getPassword().equals(password)) {
