@@ -1,8 +1,6 @@
 package com.example.bloghw2.post.dto;
 
 import com.example.bloghw2.post.entity.Post;
-
-import com.example.bloghw2.user.entity.User;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;

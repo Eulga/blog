@@ -63,7 +63,7 @@ public class PostServiceImpl implements PostService{
     @Override
     public PostResponseDTO getPost(Long postId) {
         Post post = postRepository.findById(postId)
-            .orElseThrow(() -> new PostNotFoundException("Post Not Found"));
+            .orElseThrow(() -> new PostNotFoundException("Not Found Post"));
         PostResponseDTO response = new PostResponseDTO(post);
         return response;
     }
@@ -77,11 +77,15 @@ public class PostServiceImpl implements PostService{
                 () -> new UserNotFoundException("Not Found User")
         );
 
-        // 해당 유저가 쓴 포스트가 맞는지 검사
-        // 해당 유저로 포스트
-        Post post = postRepository.findPostByPostIdAndUserId(postId, user.getId()).orElseThrow(
-                () -> new PermissionException("Not The User's Post")
+        Post post = postRepository.findById(postId).orElseThrow(
+                () -> new PostNotFoundException("Not Found Post")
         );
+
+        // 해당 유저가 쓴 포스트가 맞는지 검사
+        if(!(post.getUser().getId() == user.getId())) {
+            throw new PermissionException("Not The User's Post");
+        }
+
         post.modifyPost(postRequestDTO.getTitle(), postRequestDTO.getContents());
         PostResponseDTO response = new PostResponseDTO(post);
         return response;
@@ -92,21 +96,19 @@ public class PostServiceImpl implements PostService{
     @Transactional
     @Override
     public Map<String,String> deletePost(Long postId, String username) {
-//        Post post = postRepository.findById(postId)
-//            .orElseThrow(() -> new PostNotFoundException("Post Not Found"));
-
         User user = userRepository.findByUsername(username).orElseThrow(
                 () -> new UserNotFoundException("Not Found User")
         );
 
-        // 해당 유저가 쓴 포스트가 맞는지 검사
-        Post post = postRepository.findPostByPostIdAndUserId(postId, user.getId()).orElseThrow(
-                () -> new PermissionException("Not The User's Post")
+        Post post = postRepository.findById(postId).orElseThrow(
+                () -> new PostNotFoundException("Not Found Post")
         );
 
-//        if (!post.getPassword().equals(password)) {
-//            throw new PasswordMismatchException("The entered password does not matched");
-//        }
+        // 해당 유저가 쓴 포스트가 맞는지 검사
+        if(!(post.getUser().getId() == user.getId())) {
+            throw new PermissionException("Not The User's Post");
+        }
+
         postRepository.delete(post);
         return Collections.singletonMap("success","true");
     }

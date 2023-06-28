@@ -1,6 +1,6 @@
 package com.example.bloghw2.global;
 
-import com.example.bloghw2.global.config.dto.ExceptionDTO;
+import com.example.bloghw2.global.dto.ExceptionDTO;
 import com.example.bloghw2.post.Exception.PermissionException;
 import com.example.bloghw2.post.Exception.PostNotFoundException;
 import com.example.bloghw2.user.Exception.PasswordMismatchException;

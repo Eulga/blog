@@ -1,10 +1,10 @@
 package com.example.bloghw2.post.service;
 
-import java.util.List;
-import java.util.Map;
-
 import com.example.bloghw2.post.dto.PostRequestDTO;
 import com.example.bloghw2.post.dto.PostResponseDTO;
+
+import java.util.List;
+import java.util.Map;
 
 public interface PostService {
 

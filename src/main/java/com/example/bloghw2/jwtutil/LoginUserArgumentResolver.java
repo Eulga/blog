@@ -1,5 +1,7 @@
 package com.example.bloghw2.jwtutil;
 
+import com.example.bloghw2.user.entity.User;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -7,10 +9,6 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
-
-import com.example.bloghw2.user.entity.User;
-
-import jakarta.servlet.http.HttpServletRequest;
 
 
 public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver {
