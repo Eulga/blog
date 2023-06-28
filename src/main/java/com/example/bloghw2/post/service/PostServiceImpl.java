@@ -1,5 +1,6 @@
 package com.example.bloghw2.post.service;
 
+import com.example.bloghw2.post.Exception.PermissionException;
 import com.example.bloghw2.post.Exception.PostNotFoundException;
 import com.example.bloghw2.post.dto.PostRequestDTO;
 import com.example.bloghw2.post.dto.PostResponseDTO;
@@ -79,7 +80,7 @@ public class PostServiceImpl implements PostService{
         // 해당 유저가 쓴 포스트가 맞는지 검사
         // 해당 유저로 포스트
         Post post = postRepository.findPostByPostIdAndUserId(postId, user.getId()).orElseThrow(
-                () -> new PostNotFoundException("Not Found Post")
+                () -> new PermissionException("Not The User's Post")
         );
         post.modifyPost(postRequestDTO.getTitle(), postRequestDTO.getContents());
         PostResponseDTO response = new PostResponseDTO(post);
@@ -100,7 +101,7 @@ public class PostServiceImpl implements PostService{
 
         // 해당 유저가 쓴 포스트가 맞는지 검사
         Post post = postRepository.findPostByPostIdAndUserId(postId, user.getId()).orElseThrow(
-                () -> new PostNotFoundException("Not Found Post")
+                () -> new PermissionException("Not The User's Post")
         );
 
 //        if (!post.getPassword().equals(password)) {
