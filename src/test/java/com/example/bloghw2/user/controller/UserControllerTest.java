@@ -62,14 +62,14 @@ class UserControllerTest {
             .password(userRequestDTO.getPassword()).build();
         userSetup.saveUser(existingUser);
         UserRequestDTO newUserRequestDTO = new UserRequestDTO("username1","diffPassword");
-        BaseResponseDTO expectedResponse = new BaseResponseDTO("false",400);
+        BaseResponseDTO expectedResponse = new BaseResponseDTO("false",409);
         String request = objectMapper.writeValueAsString(newUserRequestDTO);
 
         mockMvc.perform(post("/api/signup")
                 .content(request)
                 .contentType(MediaType.APPLICATION_JSON))
 
-            .andExpect(status().isBadRequest())
+            .andExpect(status().isConflict())
             .andExpect(jsonPath("$.success").value(expectedResponse.getSuccess()))
             .andExpect(jsonPath("$.status").value(expectedResponse.getStatus()))
             .andDo(MockMvcResultHandlers.print());

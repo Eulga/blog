@@ -34,8 +34,8 @@ public class AuthExceptionFilter extends OncePerRequestFilter {
             filterChain.doFilter(request,response);
         } catch (TokenValidException e){
             handleException(response, HttpStatus.UNAUTHORIZED, e.getMessage());
-        } catch (IllegalArgumentException e){
-            handleException(response, HttpStatus.BAD_REQUEST, e.getMessage());
+        } catch (NullPointerException | IllegalArgumentException e){
+            handleException(response, HttpStatus.UNAUTHORIZED, e.getMessage());
         }
     }
 
