@@ -1,23 +1,25 @@
-package com.example.bloghw2.global;
-
-import com.example.bloghw2.global.dto.ExceptionDTO;
-import com.example.bloghw2.post.Exception.PermissionException;
-import com.example.bloghw2.post.Exception.PostNotFoundException;
-import com.example.bloghw2.user.Exception.PasswordMismatchException;
-import com.example.bloghw2.user.Exception.UserDuplicationException;
-import com.example.bloghw2.user.Exception.UserNotFoundException;
-import com.example.bloghw2.user.dto.BaseResponseDTO;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ExceptionHandler;
+package com.example.bloghw2.global.exception;
 
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-@org.springframework.web.bind.annotation.RestControllerAdvice
-public class RestControllerAdvice {
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import com.example.bloghw2.global.exception.dto.ExceptionDTO;
+import com.example.bloghw2.post.exception.PermissionException;
+import com.example.bloghw2.post.exception.PostNotFoundException;
+import com.example.bloghw2.user.dto.BaseResponseDTO;
+import com.example.bloghw2.user.exception.PasswordMismatchException;
+import com.example.bloghw2.user.exception.UserDuplicationException;
+import com.example.bloghw2.user.exception.UserNotFoundException;
+
+@RestControllerAdvice
+public class GlobalExceptionHandler {
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<BaseResponseDTO> runtimeExceptionHandler(Exception e){
