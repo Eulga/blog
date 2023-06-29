@@ -1,9 +1,9 @@
 package com.example.bloghw2.user.service;
 
-import com.example.bloghw2.jwtutil.JwtUtil;
-import com.example.bloghw2.user.Exception.PasswordMismatchException;
-import com.example.bloghw2.user.Exception.UserDuplicationException;
-import com.example.bloghw2.user.Exception.UserNotFoundException;
+import com.example.bloghw2.jwtutil.JwtProvider;
+import com.example.bloghw2.user.exception.PasswordMismatchException;
+import com.example.bloghw2.user.exception.UserDuplicationException;
+import com.example.bloghw2.user.exception.UserNotFoundException;
 import com.example.bloghw2.user.dto.BaseResponseDTO;
 import com.example.bloghw2.user.dto.LoginResponseDTO;
 import com.example.bloghw2.user.dto.UserRequestDTO;
@@ -22,7 +22,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtUtil jwtUtil;
+    private final JwtProvider jwtProvider;
 
     @Transactional
     @Override
@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
         if (!passwordEncoder.matches(rawPassword,user.getPassword())){
             throw new PasswordMismatchException("비밀번호 오류");
         }
-        String accessToken = jwtUtil.createToken(username);
+        String accessToken = jwtProvider.createToken(username);
         return new LoginResponseDTO("true",200,accessToken);
     }
 }

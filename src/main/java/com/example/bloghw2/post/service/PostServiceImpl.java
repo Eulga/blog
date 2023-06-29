@@ -1,12 +1,12 @@
 package com.example.bloghw2.post.service;
 
-import com.example.bloghw2.post.Exception.PermissionException;
-import com.example.bloghw2.post.Exception.PostNotFoundException;
+import com.example.bloghw2.post.exception.PermissionException;
+import com.example.bloghw2.post.exception.PostNotFoundException;
 import com.example.bloghw2.post.dto.PostRequestDTO;
 import com.example.bloghw2.post.dto.PostResponseDTO;
 import com.example.bloghw2.post.entity.Post;
 import com.example.bloghw2.post.repository.PostRepository;
-import com.example.bloghw2.user.Exception.UserNotFoundException;
+import com.example.bloghw2.user.exception.UserNotFoundException;
 import com.example.bloghw2.user.entity.User;
 import com.example.bloghw2.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
