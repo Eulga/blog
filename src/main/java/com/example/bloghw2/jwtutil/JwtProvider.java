@@ -15,7 +15,7 @@ import java.util.Base64;
 import java.util.Date;
 
 @Component
-public class JwtUtil {
+public class JwtProvider {
     // JWT 데이터
     // Header KEY 값
     public static final String AUTHORIZATION_HEADER = "Authorization";
@@ -90,5 +90,4 @@ public class JwtUtil {
     public Claims getUserInfoFromToken(String token) {
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
     }
-
 }
