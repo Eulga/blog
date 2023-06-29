@@ -1,6 +1,6 @@
 package com.example.bloghw2.user.controller;
 
-import com.example.bloghw2.jwtutil.JwtUtil;
+import com.example.bloghw2.jwtutil.JwtProvider;
 import com.example.bloghw2.user.dto.BaseResponseDTO;
 import com.example.bloghw2.user.dto.LoginResponseDTO;
 import com.example.bloghw2.user.dto.UserRequestDTO;
@@ -31,6 +31,6 @@ public class UserController {
     public ResponseEntity<BaseResponseDTO> login(@Valid @RequestBody UserRequestDTO userRequestDTO){
         LoginResponseDTO loginResponse = userService.login(userRequestDTO);
         BaseResponseDTO responseBody = new BaseResponseDTO(loginResponse.getSuccess(), loginResponse.getStatus());
-        return ResponseEntity.status(HttpStatus.OK).header(JwtUtil.AUTHORIZATION_HEADER, loginResponse.getAccessToken()).body(responseBody);
+        return ResponseEntity.status(HttpStatus.OK).header(JwtProvider.AUTHORIZATION_HEADER, loginResponse.getAccessToken()).body(responseBody);
     }
 }

@@ -1,4 +1,4 @@
-package com.example.bloghw2.global.dto;
+package com.example.bloghw2.global.exception.dto;
 
 import lombok.Getter;
 
