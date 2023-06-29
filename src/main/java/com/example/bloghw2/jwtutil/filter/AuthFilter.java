@@ -1,6 +1,6 @@
-package com.example.bloghw2.filter;
+package com.example.bloghw2.jwtutil.filter;
 
-import com.example.bloghw2.jwtutil.JwtUtil;
+import com.example.bloghw2.jwtutil.JwtProvider;
 import com.example.bloghw2.user.entity.User;
 import com.example.bloghw2.user.repository.UserRepository;
 import io.jsonwebtoken.Claims;
@@ -21,7 +21,7 @@ import java.io.IOException;
 public class AuthFilter implements Filter {
 
     private final UserRepository userRepository;
-    private final JwtUtil jwtUtil;
+    private final JwtProvider jwtProvider;
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
@@ -36,22 +36,22 @@ public class AuthFilter implements Filter {
         } else {
             // 나머지 API 요청은 인증 처리 진행
             // 토큰 확인
-            log.info(httpServletRequest.getHeader(JwtUtil.AUTHORIZATION_HEADER));
+            log.info(httpServletRequest.getHeader(JwtProvider.AUTHORIZATION_HEADER));
 
 //            String tokenValue = jwtUtil.getTokenFromRequest(httpServletRequest);
-            String tokenValue = httpServletRequest.getHeader(JwtUtil.AUTHORIZATION_HEADER);
+            String tokenValue = httpServletRequest.getHeader(JwtProvider.AUTHORIZATION_HEADER);
 
             if (StringUtils.hasText(tokenValue)) { // 토큰이 존재하면 검증 시작
                 // JWT 토큰 substring
-                String token = jwtUtil.substringToken(tokenValue);
+                String token = jwtProvider.substringToken(tokenValue);
 
                 // 토큰 검증
-                if (!jwtUtil.validateToken(token)) {
+                if (!jwtProvider.validateToken(token)) {
                     throw new IllegalArgumentException("Token Error");
                 }
 
                 // 토큰에서 사용자 정보 가져오기
-                Claims info = jwtUtil.getUserInfoFromToken(token);
+                Claims info = jwtProvider.getUserInfoFromToken(token);
 
                 User user = userRepository.findByUsername(info.getSubject()).orElseThrow(() ->
                         new NullPointerException("Not Found User")

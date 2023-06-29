@@ -1,4 +1,4 @@
-package com.example.bloghw2.filter;
+package com.example.bloghw2.jwtutil.filter;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -10,7 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.example.bloghw2.global.dto.ExceptionDTO;
+import com.example.bloghw2.global.exception.dto.ExceptionDTO;
 import com.example.bloghw2.jwtutil.TokenValidException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
