@@ -2,8 +2,8 @@ package com.example.bloghw2.filter;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -18,34 +18,33 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 @Order(1)
 @Component
 public class AuthExceptionFilter extends OncePerRequestFilter {
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
         FilterChain filterChain) throws ServletException, IOException {
-
         try {
             filterChain.doFilter(request,response);
         } catch (TokenValidException e){
-            response.setStatus(HttpStatus.UNAUTHORIZED.value());
-            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-            response.setCharacterEncoding("UTF-8");
-            ExceptionDTO responseBody = new ExceptionDTO("false",HttpStatus.UNAUTHORIZED.value(),
-                Collections.singletonMap("errors",e.getMessage()));
-            objectMapper.writeValue(response.getWriter(),responseBody);
+            handleException(response, HttpStatus.UNAUTHORIZED, e.getMessage());
         } catch (IllegalArgumentException e){
-            response.setStatus(HttpStatus.BAD_REQUEST.value());
-            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-            response.setCharacterEncoding("UTF-8");
-            ExceptionDTO responseBody = new ExceptionDTO("false",HttpStatus.BAD_REQUEST.value(),
-                Collections.singletonMap("errors",e.getMessage()));
-            objectMapper.writeValue(response.getWriter(),responseBody);
+            handleException(response, HttpStatus.BAD_REQUEST, e.getMessage());
         }
+    }
+
+    private void handleException(HttpServletResponse response, HttpStatus status, String message) throws IOException {
+        response.setStatus(status.value());
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        response.setCharacterEncoding("UTF-8");
+        Map<String, String> errors = Collections.singletonMap("error", message);
+        ExceptionDTO responseBody = new ExceptionDTO("false", status.value(), errors);
+        objectMapper.writeValue(response.getWriter(), responseBody);
     }
 }
