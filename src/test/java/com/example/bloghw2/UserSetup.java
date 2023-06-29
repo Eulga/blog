@@ -19,4 +19,7 @@ public class UserSetup {
     public void clearUsers(){
         userRepository.deleteAll();
     }
+    public User findUser(String username){
+        return userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException());
+    }
 }
