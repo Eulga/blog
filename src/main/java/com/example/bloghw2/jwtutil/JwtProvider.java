@@ -1,18 +1,24 @@
 package com.example.bloghw2.jwtutil;
 
-import io.jsonwebtoken.*;
-import io.jsonwebtoken.security.Keys;
-import io.jsonwebtoken.security.SignatureException;
-import jakarta.annotation.PostConstruct;
+import java.security.Key;
+import java.util.Base64;
+import java.util.Date;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import java.security.Key;
-import java.util.Base64;
-import java.util.Date;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
+import jakarta.annotation.PostConstruct;
 
 @Component
 public class JwtProvider {
@@ -66,10 +72,9 @@ public class JwtProvider {
 
     // JWT 검증
     // 토큰 검증
-    public boolean validateToken(String token) {
+    public void validateToken(String token) {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
-            return true;
 
         } catch (SecurityException | MalformedJwtException | SignatureException e) {
             logger.error("Invalid JWT signature, 유효하지 않는 JWT 서명 입니다.");
@@ -83,6 +88,9 @@ public class JwtProvider {
         } catch (IllegalArgumentException e) {
             logger.error("JWT claims is empty, 잘못된 JWT 토큰 입니다.");
             throw new TokenValidException("JWT claims is empty", e);
+        } catch (RuntimeException e){
+            logger.error("An unknown error occurred, 알 수 없는 오류가 발생했습니다.");
+            throw new TokenValidException("An unknown error occurred", e);
         }
     }
 
