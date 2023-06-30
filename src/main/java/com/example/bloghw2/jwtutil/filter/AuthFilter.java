@@ -52,9 +52,7 @@ public class AuthFilter implements Filter {
                 String token = jwtProvider.substringToken(tokenValue);
 
                 // 토큰 검증
-                if (!jwtProvider.validateToken(token)) {
-                    throw new IllegalArgumentException("Token Error");
-                }
+                jwtProvider.validateToken(token);
 
                 // 토큰에서 사용자 정보 가져오기
                 Claims info = jwtProvider.getUserInfoFromToken(token);
