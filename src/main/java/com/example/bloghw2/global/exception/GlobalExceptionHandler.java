@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import com.example.bloghw2.global.exception.dto.ExceptionDTO;
 import com.example.bloghw2.post.exception.PermissionException;
 import com.example.bloghw2.post.exception.PostNotFoundException;
-import com.example.bloghw2.user.dto.BaseResponseDTO;
 import com.example.bloghw2.user.exception.PasswordMismatchException;
 import com.example.bloghw2.user.exception.UserDuplicationException;
 import com.example.bloghw2.user.exception.UserNotFoundException;
@@ -22,8 +21,9 @@ import com.example.bloghw2.user.exception.UserNotFoundException;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<BaseResponseDTO> runtimeExceptionHandler(Exception e){
-        BaseResponseDTO errorResponse = new BaseResponseDTO("false",400);
+    public ResponseEntity<ExceptionDTO> runtimeExceptionHandler(Exception e){
+        Map<String, String> errors = Collections.singletonMap("error","RuntimeException occurred");
+        ExceptionDTO errorResponse = new ExceptionDTO("false",400, errors);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 
@@ -68,7 +68,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
 
-    // 권한 없는 사용자의 게시글 수정, 삭제
+    // 권한 없음
     @ExceptionHandler(PermissionException.class)
     public ResponseEntity<ExceptionDTO> permissionExceptionHandler(PermissionException e){
         Map<String, String> errors = Collections.singletonMap("error", e.getMessage());

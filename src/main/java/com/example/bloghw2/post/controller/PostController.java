@@ -62,7 +62,7 @@ public class PostController {
     }
 
 
-    //게시글 삭제
+    // 게시글 삭제
     @DeleteMapping("/posts/{postId}")
     public ResponseEntity<Map<String,String>> deletePost(@PathVariable("postId") Long postId, @LoginUser String username){
         Map<String, String> response = postService.deletePost(postId, username);
