@@ -4,7 +4,7 @@ import com.example.bloghw2.jwtutil.JwtProvider;
 import com.example.bloghw2.user.exception.PasswordMismatchException;
 import com.example.bloghw2.user.exception.UserDuplicationException;
 import com.example.bloghw2.user.exception.UserNotFoundException;
-import com.example.bloghw2.user.dto.BaseResponseDTO;
+import com.example.bloghw2.user.dto.UserResponseDTO;
 import com.example.bloghw2.user.dto.LoginResponseDTO;
 import com.example.bloghw2.user.dto.UserRequestDTO;
 import com.example.bloghw2.user.entity.User;
@@ -26,7 +26,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public BaseResponseDTO signup(UserRequestDTO userRequestDTO) {
+    public UserResponseDTO signup(UserRequestDTO userRequestDTO) {
         Optional<User> findUser = userRepository.findByUsername(userRequestDTO.getUsername());
 
         if (findUser.isPresent()){
@@ -38,7 +38,7 @@ public class UserServiceImpl implements UserService {
             .build();
         userRepository.save(user);
 
-        return new BaseResponseDTO("true",201);
+        return new UserResponseDTO("true",201);
     }
 
     @Transactional

@@ -14,7 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import com.example.bloghw2.UserSetup;
-import com.example.bloghw2.user.dto.BaseResponseDTO;
+import com.example.bloghw2.user.dto.UserResponseDTO;
 import com.example.bloghw2.user.dto.UserRequestDTO;
 import com.example.bloghw2.user.entity.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -41,7 +41,7 @@ class UserControllerTest {
     @DisplayName("회원가입에 성공한다.")
     void signUp_O() throws Exception{
         UserRequestDTO userRequestDTO = new UserRequestDTO("username1","password1");
-        BaseResponseDTO expectedResponse = new BaseResponseDTO("true",201);
+        UserResponseDTO expectedResponse = new UserResponseDTO("true",201);
         String request = objectMapper.writeValueAsString(userRequestDTO);
 
         mockMvc.perform(post("/api/signup")
@@ -62,7 +62,7 @@ class UserControllerTest {
             .password(userRequestDTO.getPassword()).build();
         userSetup.saveUser(existingUser);
         UserRequestDTO newUserRequestDTO = new UserRequestDTO("username1","diffPassword");
-        BaseResponseDTO expectedResponse = new BaseResponseDTO("false",409);
+        UserResponseDTO expectedResponse = new UserResponseDTO("false",409);
         String request = objectMapper.writeValueAsString(newUserRequestDTO);
 
         mockMvc.perform(post("/api/signup")
@@ -79,7 +79,7 @@ class UserControllerTest {
     void signUp_X_2() throws Exception{
 
         UserRequestDTO userRequestDTO = new UserRequestDTO("asd","password");
-        BaseResponseDTO expectedResponse = new BaseResponseDTO("false",400);
+        UserResponseDTO expectedResponse = new UserResponseDTO("false",400);
         String request = objectMapper.writeValueAsString(userRequestDTO);
 
         mockMvc.perform(post("/api/signup")
@@ -96,7 +96,7 @@ class UserControllerTest {
     void signUp_X_3() throws Exception{
 
         UserRequestDTO userRequestDTO = new UserRequestDTO("qwerasdfzxcv","password");
-        BaseResponseDTO expectedResponse = new BaseResponseDTO("false",400);
+        UserResponseDTO expectedResponse = new UserResponseDTO("false",400);
         String request = objectMapper.writeValueAsString(userRequestDTO);
 
         mockMvc.perform(post("/api/signup")
@@ -113,7 +113,7 @@ class UserControllerTest {
     void signUp_X_4() throws Exception {
 
         UserRequestDTO userRequestDTO = new UserRequestDTO("abAb!@12","password");
-        BaseResponseDTO expectedResponse = new BaseResponseDTO("false",400);
+        UserResponseDTO expectedResponse = new UserResponseDTO("false",400);
         String request = objectMapper.writeValueAsString(userRequestDTO);
 
         mockMvc.perform(post("/api/signup")
@@ -130,7 +130,7 @@ class UserControllerTest {
     void signUp_X_5() throws Exception{
 
         UserRequestDTO userRequestDTO = new UserRequestDTO("username","passwor");
-        BaseResponseDTO expectedResponse = new BaseResponseDTO("false",400);
+        UserResponseDTO expectedResponse = new UserResponseDTO("false",400);
         String request = objectMapper.writeValueAsString(userRequestDTO);
 
         mockMvc.perform(post("/api/signup")
@@ -147,7 +147,7 @@ class UserControllerTest {
     void signUp_X_6() throws Exception{
 
         UserRequestDTO userRequestDTO = new UserRequestDTO("username","passwordP1235678");
-        BaseResponseDTO expectedResponse = new BaseResponseDTO("false",400);
+        UserResponseDTO expectedResponse = new UserResponseDTO("false",400);
         String request = objectMapper.writeValueAsString(userRequestDTO);
 
         mockMvc.perform(post("/api/signup")
@@ -164,7 +164,7 @@ class UserControllerTest {
     void signUp_X_7() throws Exception {
 
         UserRequestDTO userRequestDTO = new UserRequestDTO("username","password12PA!#");
-        BaseResponseDTO expectedResponse = new BaseResponseDTO("false",400);
+        UserResponseDTO expectedResponse = new UserResponseDTO("false",400);
         String request = objectMapper.writeValueAsString(userRequestDTO);
 
         mockMvc.perform(post("/api/signup")
