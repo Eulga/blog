@@ -57,6 +57,7 @@ public class AuthFilter implements Filter {
                 // 토큰에서 사용자 정보 가져오기
                 Claims info = jwtProvider.getUserInfoFromToken(token);
 
+                // jwt 토큰에 subject로 넣어진 유저 네임으로 실제 존재하는 유저인지 확인
                 User user = userRepository.findByUsername(info.getSubject()).orElseThrow(() ->
                         new NullPointerException("Not Found User")
                 );
