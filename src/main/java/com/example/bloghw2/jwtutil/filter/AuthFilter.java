@@ -1,18 +1,24 @@
 package com.example.bloghw2.jwtutil.filter;
 
-import com.example.bloghw2.jwtutil.JwtProvider;
-import com.example.bloghw2.user.entity.User;
-import com.example.bloghw2.user.repository.UserRepository;
-import io.jsonwebtoken.Claims;
-import jakarta.servlet.*;
-import jakarta.servlet.http.HttpServletRequest;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.io.IOException;
+
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import java.io.IOException;
+import com.example.bloghw2.jwtutil.JwtProvider;
+import com.example.bloghw2.user.entity.User;
+import com.example.bloghw2.user.repository.UserRepository;
+
+import io.jsonwebtoken.Claims;
+import jakarta.servlet.Filter;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j(topic = "AuthFilter")
 @Component
@@ -57,7 +63,7 @@ public class AuthFilter implements Filter {
                         new NullPointerException("Not Found User")
                 );
 
-                request.setAttribute("user", user);
+                request.setAttribute("username", user.getUsername());
                 chain.doFilter(request, response); // 다음 Filter 로 이동
             } else {
                 throw new IllegalArgumentException("Not Found Token");
