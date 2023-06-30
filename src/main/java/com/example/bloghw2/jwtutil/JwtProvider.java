@@ -22,14 +22,11 @@ import jakarta.annotation.PostConstruct;
 
 @Component
 public class JwtProvider {
-    // JWT 데이터
-    // Header KEY 값
+
     public static final String AUTHORIZATION_HEADER = "Authorization";
 
-    // Token 식별자
-    // Bearer = 뒤의 값이 토큰값이라는 것을 알려주기위한 규칙
     public static final String BEARER_PREFIX = "Bearer ";
-    // 토큰 만료시간
+
     private final long TOKEN_TIME = 60 * 60 * 1000L; // 60분
 
     @Value("${jwt.secret.key}") // Base64 Encode 한 SecretKey
@@ -37,20 +34,17 @@ public class JwtProvider {
     private Key key;
     private final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
 
-    // 로그 설정
     public static final Logger logger = LoggerFactory.getLogger("JWT 관련 로그");
 
-    @PostConstruct // 싱글톤 패턴, 클래스가 생성될 때 딱 한번 실행되도록 해준다.
+    @PostConstruct
     public void init() {
         byte[] bytes = Base64.getDecoder().decode(secretKey);
         key = Keys.hmacShaKeyFor(bytes);
     }
 
-    // 토큰 생성
     public String createToken(String username) {
         Date date = new Date();
 
-        // 필요한 값만 넣으면 되고 아래 값을 모두 작성할 필요는 없다.
         return BEARER_PREFIX +
                 Jwts.builder()
                         .setSubject(username) // 사용자 식별자값(ID)
@@ -60,9 +54,8 @@ public class JwtProvider {
                         .compact();
     }
 
-    // Cookie에 들어있던 JWT 토큰을 Substring
+    // response header의 'Bearer ' 문자열 제거
     public String substringToken(String tokenValue) {
-        // hasText = 공백이나 널이 아닌지 체크
         if (StringUtils.hasText(tokenValue) && tokenValue.startsWith(BEARER_PREFIX)) {
             return tokenValue.substring(7);
         }
@@ -70,7 +63,6 @@ public class JwtProvider {
         throw new NullPointerException("Not Found Token");
     }
 
-    // JWT 검증
     // 토큰 검증
     public void validateToken(String token) {
         try {
@@ -94,7 +86,7 @@ public class JwtProvider {
         }
     }
 
-    // JWT에서 사용자 정보 가져오기
+    // 토큰에서 사용자 정보 추출
     public Claims getUserInfoFromToken(String token) {
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
     }
