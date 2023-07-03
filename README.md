@@ -4,4 +4,4 @@
 
 # ERD
 
-![image](https://github.com/Eulga/blog-level3/assets/63146118/f05528ea-f99a-4131-a570-4bd3c40ffcba)
+![image](https://github.com/Eulga/blog-level3/assets/63146118/5e96b7bc-52bb-4caf-b121-6a4815e7e86d)
