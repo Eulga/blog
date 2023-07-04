@@ -67,11 +67,10 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByUsername(username)
             .orElseThrow(() -> new UserNotFoundException("등록된 사용자가 아닙니다."));
 
-
-
         if (!passwordEncoder.matches(rawPassword,user.getPassword())){
             throw new PasswordMismatchException("비밀번호 오류");
         }
+
         String accessToken = jwtProvider.createToken(username);
         jwtProvider.addJwtToHeader(accessToken, res);
         return new LoginResponseDTO("true",200,accessToken);
