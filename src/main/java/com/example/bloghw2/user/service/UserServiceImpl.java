@@ -7,6 +7,7 @@ import com.example.bloghw2.user.dto.SignupRequestDTO;
 import com.example.bloghw2.user.dto.SignupResponseDTO;
 import com.example.bloghw2.user.entity.User;
 import com.example.bloghw2.user.entity.UserRoleEnum;
+import com.example.bloghw2.user.exception.AdminTokenMismatchException;
 import com.example.bloghw2.user.exception.PasswordMismatchException;
 import com.example.bloghw2.user.exception.UserDuplicationException;
 import com.example.bloghw2.user.exception.UserNotFoundException;
@@ -46,7 +47,7 @@ public class UserServiceImpl implements UserService {
         UserRoleEnum role = UserRoleEnum.USER;
         if (signupRequestDTO.isAdmin()) {
             if (!ADMIN_TOKEN.equals(signupRequestDTO.getAdminToken())) {
-                throw new IllegalArgumentException("관리자 암호가 틀려 등록이 불가능합니다.");
+                throw new AdminTokenMismatchException("잘못된 관리자 암호");
             }
             role = UserRoleEnum.ADMIN;
         }
@@ -76,6 +77,6 @@ public class UserServiceImpl implements UserService {
 
         String accessToken = jwtProvider.createToken(username);
         jwtProvider.addJwtToHeader(accessToken, res);
-        return new LoginResponseDTO("true",200,accessToken);
+        return new LoginResponseDTO("true",200);
     }
 }

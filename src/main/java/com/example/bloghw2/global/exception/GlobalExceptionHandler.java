@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import com.example.bloghw2.user.exception.AdminTokenMismatchException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -39,6 +40,14 @@ public class GlobalExceptionHandler {
     // 비밀번호 불일치
     @ExceptionHandler(PasswordMismatchException.class)
     public ResponseEntity<ExceptionDTO> passwordMismatchExceptionHandler(PasswordMismatchException e){
+        Map<String, String> errors = Collections.singletonMap("error", e.getMessage());
+        ExceptionDTO errorResponse = new ExceptionDTO("false",401, errors);
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
+    }
+
+    // 관리자 토큰 불일치
+    @ExceptionHandler(AdminTokenMismatchException.class)
+    public ResponseEntity<ExceptionDTO> adminTokenMismatchExceptionHandler(AdminTokenMismatchException e){
         Map<String, String> errors = Collections.singletonMap("error", e.getMessage());
         ExceptionDTO errorResponse = new ExceptionDTO("false",401, errors);
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
