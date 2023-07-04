@@ -3,6 +3,7 @@ package com.example.bloghw2.user.dto;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 public class UserRequestDTO {
@@ -19,4 +20,6 @@ public class UserRequestDTO {
         this.username = username;
         this.password = password;
     }
+
+
 }

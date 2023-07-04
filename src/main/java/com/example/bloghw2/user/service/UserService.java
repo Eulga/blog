@@ -1,13 +1,12 @@
 package com.example.bloghw2.user.service;
 
-import com.example.bloghw2.user.dto.UserResponseDTO;
-import com.example.bloghw2.user.dto.LoginResponseDTO;
-import com.example.bloghw2.user.dto.UserRequestDTO;
+import com.example.bloghw2.user.dto.*;
+import jakarta.servlet.http.HttpServletResponse;
 
 public interface UserService {
 
-    UserResponseDTO signup(UserRequestDTO userRequestDTO);
+    SignupResponseDTO signup(SignupRequestDTO signupRequestDTO);
 
-    LoginResponseDTO login(UserRequestDTO userRequestDTO);
+    LoginResponseDTO login(LoginRequestDTO loginRequestDTO, HttpServletResponse res);
 
 }
