@@ -8,6 +8,11 @@ build/
 build.gradle
 settings.gradle
 **/application.properties
+gradle
+src/test
+gradlew
+gradlew.bat
+README.md
 
 ### STS ###
 .apt_generated
