@@ -5,9 +5,8 @@ import lombok.Getter;
 @Getter
 public class LoginResponseDTO {
 
-    private String success;
-
-    private int status;
+    private final String success;
+    private final int status;
 
 
     public LoginResponseDTO(String success, int status) {
