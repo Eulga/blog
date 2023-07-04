@@ -4,6 +4,8 @@ import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -89,5 +91,19 @@ public class JwtProvider {
     // 토큰에서 사용자 정보 추출
     public Claims getUserInfoFromToken(String token) {
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
+    }
+
+
+    public void addJwtToHeader(String token, HttpServletResponse res) {
+        res.addHeader(AUTHORIZATION_HEADER, token);
+    }
+
+    // HttpServletRequest 에서 Header 토큰 가져오기
+    public String getTokenFromRequestHeader(HttpServletRequest req) {
+        String token = req.getHeader(AUTHORIZATION_HEADER);
+        if(token != null) {
+            return token;
+        }
+        return null;
     }
 }
