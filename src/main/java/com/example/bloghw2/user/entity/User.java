@@ -22,9 +22,14 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false)
+    @Enumerated(value = EnumType.STRING)    // Enum값 그대로 db에 저장
+    private UserRoleEnum role;
+
     @Builder
-    private User(String username, String password) {
+    private User(String username, String password, UserRoleEnum role) {
         this.username = username;
         this.password = password;
+        this.role = role;
     }
 }
