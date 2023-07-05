@@ -82,7 +82,7 @@ public class PostServiceImpl implements PostService{
         );
 
         // 해당 유저가 쓴 포스트가 맞는지 검사
-        if(!(post.getUser().getId() == user.getId())) {
+        if(!(post.getUser().getUserId() == user.getUserId())) {
             throw new PermissionException("Not The User's Post");
         }
 
@@ -105,7 +105,7 @@ public class PostServiceImpl implements PostService{
         );
 
         // 해당 유저가 쓴 포스트가 맞는지 검사
-        if(!(post.getUser().getId() == user.getId())) {
+        if(!(post.getUser().getUserId() == user.getUserId())) {
             throw new PermissionException("Not The User's Post");
         }
 
