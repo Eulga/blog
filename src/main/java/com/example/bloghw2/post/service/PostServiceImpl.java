@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
-public class PostServiceImpl implements PostService{
+public class PostServiceImpl implements PostService {
 
     private final PostRepository postRepository;
     private final UserRepository userRepository;
@@ -52,8 +52,8 @@ public class PostServiceImpl implements PostService{
         List<Post> posts = postRepository.findAllByOrderByCreatedDateDesc();
 
         List<PostResponseDTO> response = posts.stream()
-            .map(PostResponseDTO::new)
-            .collect(Collectors.toList());
+                .map(PostResponseDTO::new)
+                .collect(Collectors.toList());
         return response;
     }
 
@@ -63,7 +63,7 @@ public class PostServiceImpl implements PostService{
     @Override
     public PostResponseDTO getPost(Long postId) {
         Post post = postRepository.findById(postId)
-            .orElseThrow(() -> new PostNotFoundException("Not Found Post"));
+                .orElseThrow(() -> new PostNotFoundException("Not Found Post"));
         PostResponseDTO response = new PostResponseDTO(post);
         return response;
     }
@@ -82,7 +82,7 @@ public class PostServiceImpl implements PostService{
         );
 
         // 해당 유저가 쓴 포스트가 맞는지 검사
-        if(!(post.getUser().getUserId() == user.getUserId())) {
+        if (!(post.getUser().getUserId() == user.getUserId())) {
             throw new PermissionException("Not The User's Post");
         }
 
@@ -95,7 +95,7 @@ public class PostServiceImpl implements PostService{
     // 게시글 삭제
     @Transactional
     @Override
-    public Map<String,String> deletePost(Long postId, String username) {
+    public Map<String, String> deletePost(Long postId, String username) {
         User user = userRepository.findByUsername(username).orElseThrow(
                 () -> new UserNotFoundException("Not Found User")
         );
@@ -105,11 +105,11 @@ public class PostServiceImpl implements PostService{
         );
 
         // 해당 유저가 쓴 포스트가 맞는지 검사
-        if(!(post.getUser().getUserId() == user.getUserId())) {
+        if (!(post.getUser().getUserId() == user.getUserId())) {
             throw new PermissionException("Not The User's Post");
         }
 
         postRepository.delete(post);
-        return Collections.singletonMap("success","true");
+        return Collections.singletonMap("success", "true");
     }
 }

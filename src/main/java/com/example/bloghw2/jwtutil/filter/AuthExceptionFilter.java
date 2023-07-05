@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -20,6 +21,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
+@Slf4j(topic = "AuthExceptionFilter")
 @RequiredArgsConstructor
 @Order(1)
 @Component
@@ -40,6 +42,7 @@ public class AuthExceptionFilter extends OncePerRequestFilter {
     }
 
     private void handleException(HttpServletResponse response, HttpStatus status, String message) throws IOException {
+        log.error(message);
         response.setStatus(status.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding("UTF-8");
