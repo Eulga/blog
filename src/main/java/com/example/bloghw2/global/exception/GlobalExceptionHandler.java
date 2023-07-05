@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.example.bloghw2.user.exception.AdminTokenMismatchException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -18,11 +19,13 @@ import com.example.bloghw2.user.exception.PasswordMismatchException;
 import com.example.bloghw2.user.exception.UserDuplicationException;
 import com.example.bloghw2.user.exception.UserNotFoundException;
 
+@Slf4j(topic = "GlobalExceptionHandler")
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ExceptionDTO> runtimeExceptionHandler(Exception e){
+        log.error(e.getMessage());
         Map<String, String> errors = Collections.singletonMap("error","RuntimeException occurred");
         ExceptionDTO errorResponse = new ExceptionDTO("false",400, errors);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
