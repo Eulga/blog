@@ -7,13 +7,11 @@ import lombok.Getter;
 @Getter
 public class SignupRequestDTO {
 
-    @Size(min = 4, max = 10)
-    @Pattern(regexp = "^[a-z0-9]+$")
+    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-zA-Z]).{4,10}$", message = ("영문과 숫자 조합으로 작성하셔야 합니다."))
     private final String username;
 
     //특수문자 정규표현식 https://mkyong.com/regular-expressions/how-to-validate-password-with-regular-expression/
-    @Size(min=8, max=15)
-    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,15}$")
+    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[!\"#$%&'()*+,\\-./:;<=>?@\\[₩\\]^_`{|}~]).{8,15}$")
     private final String password;
 
     private boolean admin = false;

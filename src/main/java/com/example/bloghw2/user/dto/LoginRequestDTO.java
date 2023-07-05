@@ -6,12 +6,10 @@ import lombok.Getter;
 
 @Getter
 public class LoginRequestDTO {
-    @Size(min = 4, max = 10)
-    @Pattern(regexp = "^[a-z0-9]+$")
+    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-zA-Z]).{4,10}$")
     private final String username;
 
-    @Size(min=8, max=15)
-    @Pattern(regexp = "^[a-zA-Z0-9]+$")
+    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[!\"#$%&'()*+,\\-./:;<=>?@\\[₩\\]^_`{|}~]).{8,15}$")
     private final String password;
 
     public LoginRequestDTO(String username, String password) {
