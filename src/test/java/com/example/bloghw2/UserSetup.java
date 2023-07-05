@@ -13,7 +13,7 @@ public class UserSetup {
     private UserRepository userRepository;
 
     public Long saveUser(User user){
-        return userRepository.save(user).getId();
+        return userRepository.save(user).getUserId();
     }
 
     public void clearUsers(){
