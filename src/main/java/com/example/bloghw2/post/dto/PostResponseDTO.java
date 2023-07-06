@@ -29,9 +29,10 @@ public class PostResponseDTO {
         this.author = post.getUser().getUsername();
         this.contents = post.getContents();
         this.createdDate = post.getCreatedDate();
+        if (!(post.getCommentList() == null)) setCommentList(post.getCommentList());
     }
 
-    public void setCommentList(List<CommentResponseDTO> commentList) {
-        this.commentList = commentList;
+    public void setCommentList(List<Comment> commentList) {
+        this.commentList = commentList.stream().map(CommentResponseDTO::new).toList();
     }
 }

@@ -1,6 +1,6 @@
 package com.example.bloghw2.post.service;
 
-import com.example.bloghw2.post.exception.PermissionException;
+import com.example.bloghw2.post.exception.PostPermissionException;
 import com.example.bloghw2.post.exception.PostNotFoundException;
 import com.example.bloghw2.post.dto.PostRequestDTO;
 import com.example.bloghw2.post.dto.PostResponseDTO;
@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -82,8 +83,8 @@ public class PostServiceImpl implements PostService {
         );
 
         // 해당 유저가 쓴 포스트가 맞는지 검사
-        if (!(post.getUser().getUserId() == user.getUserId())) {
-            throw new PermissionException("Not The User's Post");
+        if (!(post.getUser().getUserId().equals(user.getUserId()))) {
+            throw new PostPermissionException("Not The User's Post");
         }
 
         post.modifyPost(postRequestDTO.getTitle(), postRequestDTO.getContents());
@@ -105,11 +106,14 @@ public class PostServiceImpl implements PostService {
         );
 
         // 해당 유저가 쓴 포스트가 맞는지 검사
-        if (!(post.getUser().getUserId() == user.getUserId())) {
-            throw new PermissionException("Not The User's Post");
+        if (!(post.getUser().getUserId().equals(user.getUserId()))) {
+            throw new PostPermissionException("Not The User's Post");
         }
 
         postRepository.delete(post);
-        return Collections.singletonMap("success", "true");
+        return new LinkedHashMap<>() {{
+            put("success","true");
+            put("status","200");
+        }};
     }
 }

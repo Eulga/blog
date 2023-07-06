@@ -2,6 +2,7 @@ package com.example.bloghw2.post.entity;
 
 import com.example.bloghw2.comment.entity.Comment;
 import com.example.bloghw2.user.entity.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
@@ -12,7 +13,6 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import static jakarta.persistence.FetchType.LAZY;
@@ -41,13 +41,15 @@ public class Post {
     @CreatedDate
     private LocalDateTime createdDate;
 
+    @OneToMany(mappedBy = "post", fetch = LAZY, cascade = CascadeType.ALL)
+    private List<Comment> commentList;
+
     @Builder
     private Post(String title, String contents, User user) {
         this.title = title;
         this.contents = contents;
         this.user = user;
     }
-
 
     public void modifyPost(String title, String contents){
         this.title = title;

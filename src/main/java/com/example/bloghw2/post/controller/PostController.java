@@ -37,7 +37,6 @@ public class PostController {
     @PostMapping("/posts")
     public ResponseEntity<PostResponseDTO> createPost(@Valid @RequestBody PostRequestDTO postRequestDTO, @LoginUser String username) {
         PostResponseDTO response = postService.createPost(postRequestDTO, username);
-        setCommentListInPostResponseDTO(response);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -45,9 +44,6 @@ public class PostController {
     @GetMapping("/posts")
     public ResponseEntity<List<PostResponseDTO>> getPosts() {
         List<PostResponseDTO> response = postService.getPosts();
-        for (PostResponseDTO prsd : response) {
-            setCommentListInPostResponseDTO(prsd);
-        }
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
@@ -55,7 +51,6 @@ public class PostController {
     @GetMapping("/posts/{postId}")
     public ResponseEntity<PostResponseDTO> getPost(@PathVariable("postId") Long postId) {
         PostResponseDTO response = postService.getPost(postId);
-        setCommentListInPostResponseDTO(response);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
@@ -64,7 +59,6 @@ public class PostController {
     public ResponseEntity<PostResponseDTO> modifyPost(@PathVariable("postId") Long postId,@Valid @RequestBody PostRequestDTO postRequestDTO
     , @LoginUser String username) {
         PostResponseDTO response = postService.modifyPost(postId, postRequestDTO, username);
-        setCommentListInPostResponseDTO(response);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -74,11 +68,5 @@ public class PostController {
     public ResponseEntity<Map<String,String>> deletePost(@PathVariable("postId") Long postId, @LoginUser String username){
         Map<String, String> response = postService.deletePost(postId, username);
         return ResponseEntity.status(HttpStatus.OK).body(response);
-    }
-
-    // 댓글 목록 주입
-    private void setCommentListInPostResponseDTO(PostResponseDTO prsd) {
-        List<CommentResponseDTO> commentList = commentService.getCommentsByPostId(prsd.getPostId());
-        prsd.setCommentList(commentList.isEmpty() ? new ArrayList<>() : commentList);
     }
 }
