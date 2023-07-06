@@ -4,9 +4,9 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import com.example.bloghw2.comment.exception.CommentNotFoundException;
-import com.example.bloghw2.comment.exception.CommentPermissionException;
-import com.example.bloghw2.user.exception.AdminTokenMismatchException;
+import com.example.bloghw2.domain.comment.exception.CommentNotFoundException;
+import com.example.bloghw2.domain.comment.exception.CommentPermissionException;
+import com.example.bloghw2.domain.user.exception.AdminTokenMismatchException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,11 +15,11 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.example.bloghw2.global.exception.dto.ExceptionDTO;
-import com.example.bloghw2.post.exception.PostPermissionException;
-import com.example.bloghw2.post.exception.PostNotFoundException;
-import com.example.bloghw2.user.exception.PasswordMismatchException;
-import com.example.bloghw2.user.exception.UserDuplicationException;
-import com.example.bloghw2.user.exception.UserNotFoundException;
+import com.example.bloghw2.domain.post.exception.PostPermissionException;
+import com.example.bloghw2.domain.post.exception.PostNotFoundException;
+import com.example.bloghw2.domain.user.exception.PasswordMismatchException;
+import com.example.bloghw2.domain.user.exception.UserDuplicationException;
+import com.example.bloghw2.domain.user.exception.UserNotFoundException;
 
 @Slf4j(topic = "GlobalExceptionHandler")
 @RestControllerAdvice
