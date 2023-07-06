@@ -1,7 +1,6 @@
 package com.example.bloghw2.user.dto;
 
 import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 
 @Getter

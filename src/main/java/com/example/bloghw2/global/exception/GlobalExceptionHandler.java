@@ -4,6 +4,8 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import com.example.bloghw2.comment.exception.CommentNotFoundException;
+import com.example.bloghw2.comment.exception.CommentPermissionException;
 import com.example.bloghw2.user.exception.AdminTokenMismatchException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -80,9 +82,25 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
 
-    // 권한 없음
+    // 게시글에 권한 없음
     @ExceptionHandler(PostPermissionException.class)
     public ResponseEntity<ExceptionDTO> permissionExceptionHandler(PostPermissionException e){
+        Map<String, String> errors = Collections.singletonMap("error", e.getMessage());
+        ExceptionDTO errorResponse = new ExceptionDTO("false",403, errors);
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
+    }
+
+    // 댓글 정보 없음
+    @ExceptionHandler(CommentNotFoundException.class)
+    public ResponseEntity<ExceptionDTO> postNotFoundExceptionHandler(CommentNotFoundException e){
+        Map<String, String> errors = Collections.singletonMap("error", e.getMessage());
+        ExceptionDTO errorResponse = new ExceptionDTO("false",404, errors);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+
+    // 댓글에 관한 권한 없음
+    @ExceptionHandler(CommentPermissionException.class)
+    public ResponseEntity<ExceptionDTO> permissionExceptionHandler(CommentPermissionException e){
         Map<String, String> errors = Collections.singletonMap("error", e.getMessage());
         ExceptionDTO errorResponse = new ExceptionDTO("false",403, errors);
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
