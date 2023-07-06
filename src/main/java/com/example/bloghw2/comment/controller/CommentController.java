@@ -20,6 +20,7 @@ public class CommentController {
 
     private final CommentService commentService;
 
+    // 댓글 생성
     @PostMapping("/comments")
     public ResponseEntity<CommentResponseDTO> createComment(@Valid @RequestBody CommentRequestDTO commentRequestDTO,
                                                             @LoginUser String username) {
@@ -27,6 +28,7 @@ public class CommentController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+    // 댓글 수정
     @PutMapping("/comments/{commentId}")
     public ResponseEntity<CommentResponseDTO> modifyComment(@Valid @RequestBody CommentRequestDTO commentRequestDTO,
                                                             @LoginUser String username, @PathVariable("commentId") Long commentId) {
@@ -34,6 +36,7 @@ public class CommentController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+    // 댓글 삭제
     @DeleteMapping("/comments/{commentId}")
     public ResponseEntity<Map<String, String>> deleteComment(@LoginUser String username, @PathVariable("commentId") Long commentId) {
         return ResponseEntity.status(HttpStatus.OK).body(commentService.deleteComment(commentId, username));

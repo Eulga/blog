@@ -123,6 +123,7 @@ public class PostServiceImpl implements PostService {
         }};
     }
 
+    // 수정, 삭제시 권한 확인
     private boolean validationAuthority(User user, Post post) {
         if (!user.getRole().equals(UserRoleEnum.ADMIN)) {
             if (!(post.getUser().getUserId().equals(user.getUserId()))) {

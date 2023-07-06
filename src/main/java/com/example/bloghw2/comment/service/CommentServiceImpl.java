@@ -32,6 +32,7 @@ public class CommentServiceImpl implements CommentService {
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
 
+    // 해당 게시글 댓글 조회
     @Override
     public List<CommentResponseDTO> getCommentsByPostId(Long postId) {
         Post post = postRepository.findById(postId).orElseThrow(
@@ -44,6 +45,7 @@ public class CommentServiceImpl implements CommentService {
                 .toList();
     }
 
+    // 댓글 작성
     @Transactional
     @Override
     public CommentResponseDTO createComment(CommentRequestDTO crqd, String username) {
@@ -63,6 +65,7 @@ public class CommentServiceImpl implements CommentService {
         return new CommentResponseDTO(commentRepository.save(comment));
     }
 
+    // 댓글 수정
     @Transactional
     @Override
     public CommentResponseDTO modifyComment(Long commentId, CommentRequestDTO commentRequestDTO, String username) {
@@ -82,6 +85,7 @@ public class CommentServiceImpl implements CommentService {
         return new CommentResponseDTO(comment);
     }
 
+    // 댓글 삭제
     @Transactional
     @Override
     public Map<String, String> deleteComment(Long commentId, String username) {
@@ -103,6 +107,7 @@ public class CommentServiceImpl implements CommentService {
         }};
     }
 
+    // 수정, 삭제시 권한 확인
     private boolean validationAuthority(User user, Comment comment) {
         if (!user.getRole().equals(UserRoleEnum.ADMIN)) {
             if (!user.getUsername().equals(comment.getUser().getUsername())) {
