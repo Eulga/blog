@@ -6,6 +6,7 @@ import com.example.bloghw2.post.dto.PostRequestDTO;
 import com.example.bloghw2.post.dto.PostResponseDTO;
 import com.example.bloghw2.post.entity.Post;
 import com.example.bloghw2.post.repository.PostRepository;
+import com.example.bloghw2.user.entity.UserRoleEnum;
 import com.example.bloghw2.user.exception.UserNotFoundException;
 import com.example.bloghw2.user.entity.User;
 import com.example.bloghw2.user.repository.UserRepository;
@@ -82,12 +83,17 @@ public class PostServiceImpl implements PostService {
                 () -> new PostNotFoundException("Not Found Post")
         );
 
-        // 해당 유저가 쓴 포스트가 맞는지 검사
-        if (!(post.getUser().getUserId().equals(user.getUserId()))) {
+        if (!user.getRole().equals(UserRoleEnum.ADMIN)) {
+            if (!(post.getUser().getUserId().equals(user.getUserId()))) {
+                throw new PostPermissionException("Not The User's Post");
+            }
+        }
+        if (validationAuthority(user, post)) {
+            post.modifyPost(postRequestDTO.getTitle(), postRequestDTO.getContents());
+        } else {
             throw new PostPermissionException("Not The User's Post");
         }
 
-        post.modifyPost(postRequestDTO.getTitle(), postRequestDTO.getContents());
         PostResponseDTO response = new PostResponseDTO(post);
         return response;
     }
@@ -105,15 +111,24 @@ public class PostServiceImpl implements PostService {
                 () -> new PostNotFoundException("Not Found Post")
         );
 
-        // 해당 유저가 쓴 포스트가 맞는지 검사
-        if (!(post.getUser().getUserId().equals(user.getUserId()))) {
+        if (validationAuthority(user, post)) {
+            postRepository.delete(post);
+        } else {
             throw new PostPermissionException("Not The User's Post");
         }
 
-        postRepository.delete(post);
         return new LinkedHashMap<>() {{
-            put("success","true");
-            put("status","200");
+            put("success", "true");
+            put("status", "200");
         }};
+    }
+
+    private boolean validationAuthority(User user, Post post) {
+        if (!user.getRole().equals(UserRoleEnum.ADMIN)) {
+            if (!(post.getUser().getUserId().equals(user.getUserId()))) {
+                return false;
+            }
+        }
+        return true;
     }
 }
