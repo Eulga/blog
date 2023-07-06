@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.example.bloghw2.global.exception.dto.ExceptionDTO;
-import com.example.bloghw2.post.exception.PermissionException;
+import com.example.bloghw2.post.exception.PostPermissionException;
 import com.example.bloghw2.post.exception.PostNotFoundException;
 import com.example.bloghw2.user.exception.PasswordMismatchException;
 import com.example.bloghw2.user.exception.UserDuplicationException;
@@ -81,8 +81,8 @@ public class GlobalExceptionHandler {
     }
 
     // 권한 없음
-    @ExceptionHandler(PermissionException.class)
-    public ResponseEntity<ExceptionDTO> permissionExceptionHandler(PermissionException e){
+    @ExceptionHandler(PostPermissionException.class)
+    public ResponseEntity<ExceptionDTO> permissionExceptionHandler(PostPermissionException e){
         Map<String, String> errors = Collections.singletonMap("error", e.getMessage());
         ExceptionDTO errorResponse = new ExceptionDTO("false",403, errors);
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);

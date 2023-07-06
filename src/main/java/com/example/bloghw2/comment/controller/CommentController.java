@@ -10,6 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.xml.transform.OutputKeys;
+import java.util.Map;
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api")
@@ -19,7 +22,7 @@ public class CommentController {
 
     @PostMapping("/comments")
     public ResponseEntity<CommentResponseDTO> createComment(@Valid @RequestBody CommentRequestDTO commentRequestDTO,
-                                                      @LoginUser String username) {
+                                                            @LoginUser String username) {
         CommentResponseDTO response = commentService.createComment(commentRequestDTO, username);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
@@ -29,6 +32,11 @@ public class CommentController {
                                                             @LoginUser String username, @PathVariable("commentId") Long commentId) {
         CommentResponseDTO response = commentService.modifyComment(commentId, commentRequestDTO, username);
         return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @DeleteMapping("/comments/{commentId}")
+    public ResponseEntity<Map<String, String>> deleteComment(@LoginUser String username, @PathVariable("commentId") Long commentId) {
+        return ResponseEntity.status(HttpStatus.OK).body(commentService.deleteComment(commentId, username));
     }
 
 
