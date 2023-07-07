@@ -13,4 +13,4 @@ https://parallel-lightning-940.notion.site/f557e8dca9d444ca8ecd88a7e1b631a7?v=aa
 https://documenter.getpostman.com/view/20373378/2s93zFXKTV
 
 # 제출양식 노션
-https://www.notion.so/Lv-3-fd219774d40340bbab05e084954232ee
+https://parallel-lightning-940.notion.site/Lv-3-fd219774d40340bbab05e084954232ee
