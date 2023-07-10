@@ -21,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j(topic = "AuthFilter")
-@Component
+//@Component
 @Order(2)
 @RequiredArgsConstructor
 public class AuthFilter implements Filter {
