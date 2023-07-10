@@ -3,7 +3,6 @@ package com.example.bloghw2.domain.comment.controller;
 import com.example.bloghw2.domain.comment.dto.CommentRequestDTO;
 import com.example.bloghw2.domain.comment.dto.CommentResponseDTO;
 import com.example.bloghw2.domain.comment.service.CommentService;
-import com.example.bloghw2.global.jwtutil.LoginUser;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,7 +21,7 @@ public class CommentController {
     // 댓글 생성
     @PostMapping("/comments")
     public ResponseEntity<CommentResponseDTO> createComment(@Valid @RequestBody CommentRequestDTO commentRequestDTO,
-                                                            @LoginUser String username) {
+                                                            String username) {
         CommentResponseDTO response = commentService.createComment(commentRequestDTO, username);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
@@ -30,14 +29,14 @@ public class CommentController {
     // 댓글 수정
     @PutMapping("/comments/{commentId}")
     public ResponseEntity<CommentResponseDTO> modifyComment(@Valid @RequestBody CommentRequestDTO commentRequestDTO,
-                                                            @LoginUser String username, @PathVariable("commentId") Long commentId) {
+                                                            String username, @PathVariable("commentId") Long commentId) {
         CommentResponseDTO response = commentService.modifyComment(commentId, commentRequestDTO, username);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     // 댓글 삭제
     @DeleteMapping("/comments/{commentId}")
-    public ResponseEntity<Map<String, String>> deleteComment(@LoginUser String username, @PathVariable("commentId") Long commentId) {
+    public ResponseEntity<Map<String, String>> deleteComment(String username, @PathVariable("commentId") Long commentId) {
         return ResponseEntity.status(HttpStatus.OK).body(commentService.deleteComment(commentId, username));
     }
 

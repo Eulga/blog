@@ -1,7 +1,5 @@
 package com.example.bloghw2.domain.user.controller;
 
-import com.example.bloghw2.domain.user.dto.LoginRequestDTO;
-import com.example.bloghw2.domain.user.dto.LoginResponseDTO;
 import com.example.bloghw2.domain.user.dto.SignupRequestDTO;
 import com.example.bloghw2.domain.user.dto.SignupResponseDTO;
 import com.example.bloghw2.domain.user.service.UserService;
@@ -23,15 +21,16 @@ public class UserController {
 
     private final UserService userService;
 
-    @PostMapping("/signup")
-    public ResponseEntity<SignupResponseDTO> signup(@Valid @RequestBody SignupRequestDTO signupRequestDTO){
-        SignupResponseDTO response = userService.signup(signupRequestDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    @PostMapping("/user/signup")
+    public ResponseEntity<SignupResponseDTO> signup(@RequestBody @Valid SignupRequestDTO signupRequestDto) {
+        return userService.signup(signupRequestDto);
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<LoginResponseDTO> login(@Valid @RequestBody LoginRequestDTO loginRequestDTO, HttpServletResponse res){
-        LoginResponseDTO response = userService.login(loginRequestDTO, res);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
-    }
+    // 로그인은 global - jwt - JwtAuthenticationFilter 에서 처리
+    /*
+        public JwtAuthenticationFilter(JwtUtil jwtUtil) {
+            this.jwtUtil = jwtUtil;
+            setFilterProcessesUrl("/api/user/login");
+        }
+     */
 }

@@ -1,16 +1,17 @@
 package com.example.bloghw2.domain.user.service;
 
+import com.example.bloghw2.global.jwt.JwtUtil;
 import com.example.bloghw2.domain.user.dto.SignupRequestDTO;
+import com.example.bloghw2.domain.user.dto.SignupResponseDTO;
 import com.example.bloghw2.domain.user.entity.User;
 import com.example.bloghw2.domain.user.entity.UserRoleEnum;
 import com.example.bloghw2.domain.user.exception.AdminTokenMismatchException;
 import com.example.bloghw2.domain.user.repository.UserRepository;
-import com.example.bloghw2.global.jwtutil.JwtUtil;
 import com.example.bloghw2.domain.user.exception.UserDuplicationException;
-import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
+import lombok.RequiredArgsConstructor;
 import java.util.Optional;
 
 
@@ -20,16 +21,15 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtUtil jwtUtil;
 
     // ADMIN_TOKEN
     private final String ADMIN_TOKEN = "AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC";
 
-    public void signup(SignupRequestDTO requestDto) {
+    public ResponseEntity<SignupResponseDTO> signup(SignupRequestDTO requestDto) {
         String username = requestDto.getUsername();
         String password = passwordEncoder.encode(requestDto.getPassword());
 
-        // 회원 중복 확인
+        // username 중복 확인
         Optional<User> findUser = userRepository.findByUsername(username);
         if (findUser.isPresent()){
             throw new UserDuplicationException("아이디 중복");
@@ -51,6 +51,8 @@ public class UserService {
             .role(role)
             .build();
         userRepository.save(user);
+
+        return ResponseEntity.status(201).body(new SignupResponseDTO(201, "회원가입 완료."));
     }
 
 }

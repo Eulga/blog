@@ -1,6 +1,6 @@
-package com.example.bloghw2.global.jwtutil.filter;
+package com.example.bloghw2.global.security;
 
-import com.example.bloghw2.global.jwtutil.JwtUtil;
+import com.example.bloghw2.global.jwt.JwtUtil;
 import com.example.bloghw2.global.security.UserDetailsServiceImpl;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
@@ -32,11 +32,10 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain filterChain) throws ServletException, IOException {
 
-        String tokenValue = jwtUtil.getTokenFromRequestHeader(req);
+        String tokenValue = jwtUtil.getJwtFromHeader(req);
 
         if (StringUtils.hasText(tokenValue)) {
-            // JWT 토큰 substring
-            tokenValue = jwtUtil.substringToken(tokenValue);
+
             log.info(tokenValue);
 
             if (!jwtUtil.validateToken(tokenValue)) {

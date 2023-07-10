@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.bloghw2.global.jwtutil.LoginUser;
 import com.example.bloghw2.domain.post.dto.PostRequestDTO;
 import com.example.bloghw2.domain.post.dto.PostResponseDTO;
 
@@ -33,7 +32,8 @@ public class PostController {
 
     // 게시글 생성
     @PostMapping("/posts")
-    public ResponseEntity<PostResponseDTO> createPost(@Valid @RequestBody PostRequestDTO postRequestDTO, @LoginUser String username) {
+    public ResponseEntity<PostResponseDTO> createPost(@Valid @RequestBody PostRequestDTO postRequestDTO,
+                                                      String username) {
         PostResponseDTO response = postService.createPost(postRequestDTO, username);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
@@ -54,8 +54,9 @@ public class PostController {
 
     // 게시글 수정
     @PutMapping("/posts/{postId}")
-    public ResponseEntity<PostResponseDTO> modifyPost(@PathVariable("postId") Long postId,@Valid @RequestBody PostRequestDTO postRequestDTO
-    , @LoginUser String username) {
+    public ResponseEntity<PostResponseDTO> modifyPost(@PathVariable("postId") Long postId
+                                                    ,@Valid @RequestBody PostRequestDTO postRequestDTO
+                                                    , String username) {
         PostResponseDTO response = postService.modifyPost(postId, postRequestDTO, username);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
@@ -63,7 +64,8 @@ public class PostController {
 
     // 게시글 삭제
     @DeleteMapping("/posts/{postId}")
-    public ResponseEntity<Map<String,String>> deletePost(@PathVariable("postId") Long postId, @LoginUser String username){
+    public ResponseEntity<Map<String,String>> deletePost(@PathVariable("postId") Long postId
+                                                        , String username){
         Map<String, String> response = postService.deletePost(postId, username);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }

@@ -1,8 +1,8 @@
-package com.example.bloghw2.global.jwtutil.filter;
+package com.example.bloghw2.global.security;
 
 import com.example.bloghw2.domain.user.dto.LoginRequestDTO;
 import com.example.bloghw2.domain.user.entity.UserRoleEnum;
-import com.example.bloghw2.global.jwtutil.JwtUtil;
+import com.example.bloghw2.global.jwt.JwtUtil;
 import com.example.bloghw2.global.security.UserDetailsImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
@@ -16,6 +16,11 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.io.IOException;
+import java.io.OutputStream;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 @Slf4j(topic = "로그인 및 JWT 생성")
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
@@ -23,7 +28,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     public JwtAuthenticationFilter(JwtUtil jwtUtil) {
         this.jwtUtil = jwtUtil;
-        setFilterProcessesUrl("/api/login");
+        setFilterProcessesUrl("/api/user/login");
     }
 
     @Override
@@ -46,20 +51,45 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     }
 
     @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
+    protected void successfulAuthentication(HttpServletRequest request
+            , HttpServletResponse response
+            , FilterChain chain
+            , Authentication authResult) throws IOException, ServletException {
         log.info("로그인 성공 및 JWT 생성");
         String username = ((UserDetailsImpl) authResult.getPrincipal()).getUsername();
         UserRoleEnum role = ((UserDetailsImpl) authResult.getPrincipal()).getUser().getRole();
 
         String token = jwtUtil.createToken(username, role);
-        jwtUtil.addJwtToHeader(token, response);
+        response.addHeader(JwtUtil.AUTHORIZATION_HEADER, token);
+
+        Map<String, Object> data = new LinkedHashMap<>();
+        data.put("status",HttpServletResponse.SC_OK);
+        data.put("message", "로그인 성공");
+
+        ObjectMapper mapper = new ObjectMapper();
+        String jsonString = mapper.writeValueAsString(data);
+
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().write(jsonString);
     }
 
     @Override
-    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
-        log.info("로그인 실패");
-        response.setStatus(401);
-        // 추가적인 메세지 여기서 작업해줄 수 있다
-        // 클라이언트 쪽에서 코드랑 메세지 필요할 수 있음
+    protected void unsuccessfulAuthentication(HttpServletRequest request
+            , HttpServletResponse response
+            , AuthenticationException failed) throws IOException, ServletException {
+
+        Map<String, Object> data = new LinkedHashMap<>();
+
+        data.put("status",HttpServletResponse.SC_UNAUTHORIZED);
+        data.put("message", failed.getMessage());
+
+        ObjectMapper mapper = new ObjectMapper();
+        String jsonString = mapper.writeValueAsString(data);
+
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().write(jsonString);
+
     }
 }
