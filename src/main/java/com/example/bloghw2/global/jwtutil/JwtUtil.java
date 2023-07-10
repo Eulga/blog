@@ -4,6 +4,8 @@ import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
 
+import com.example.bloghw2.domain.user.entity.UserRoleEnum;
+import io.jsonwebtoken.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
@@ -12,18 +14,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
-import io.jsonwebtoken.security.SignatureException;
 import jakarta.annotation.PostConstruct;
 
 @Component
-public class JwtProvider {
+public class JwtUtil {
 
     public static final String AUTHORIZATION_HEADER = "Authorization";
 
@@ -44,7 +39,7 @@ public class JwtProvider {
         key = Keys.hmacShaKeyFor(bytes);
     }
 
-    public String createToken(String username) {
+    public String createToken(String username, UserRoleEnum role) {
         Date date = new Date();
 
         return BEARER_PREFIX +
@@ -54,6 +49,11 @@ public class JwtProvider {
                         .setIssuedAt(date) // 발급일
                         .signWith(key, signatureAlgorithm) // 암호화 알고리즘
                         .compact();
+    }
+
+    // 생성한 JWT를 response header에 넣어줌
+    public void addJwtToHeader(String token, HttpServletResponse res) {
+        res.addHeader(AUTHORIZATION_HEADER, token);
     }
 
     // response header의 'Bearer ' 문자열 제거
@@ -66,26 +66,20 @@ public class JwtProvider {
     }
 
     // 토큰 검증
-    public void validateToken(String token) {
+    public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
-
+            return true;
         } catch (SecurityException | MalformedJwtException | SignatureException e) {
             logger.error("Invalid JWT signature, 유효하지 않는 JWT 서명 입니다.");
-            throw new TokenValidException("Invalid JWT signature", e);
         } catch (ExpiredJwtException e) {
             logger.error("Expired JWT token, 만료된 JWT token 입니다.");
-            throw new TokenValidException("Expired JWT token", e);
         } catch (UnsupportedJwtException e) {
             logger.error("Unsupported JWT token, 지원되지 않는 JWT 토큰 입니다.");
-            throw new TokenValidException("Unsupported JWT token", e);
         } catch (IllegalArgumentException e) {
             logger.error("JWT claims is empty, 잘못된 JWT 토큰 입니다.");
-            throw new TokenValidException("JWT claims is empty", e);
-        } catch (RuntimeException e){
-            logger.error("An unknown error occurred, 알 수 없는 오류가 발생했습니다.");
-            throw new TokenValidException("An unknown error occurred", e);
         }
+        return false;
     }
 
     // 토큰에서 사용자 정보 추출
@@ -94,11 +88,7 @@ public class JwtProvider {
     }
 
 
-    public void addJwtToHeader(String token, HttpServletResponse res) {
-        res.addHeader(AUTHORIZATION_HEADER, token);
-    }
-
-    // HttpServletRequest 에서 Header 토큰 가져오기
+    // HttpServletRequest 에서 Header의 JWT 토큰 가져오기
     public String getTokenFromRequestHeader(HttpServletRequest req) {
         String token = req.getHeader(AUTHORIZATION_HEADER);
         if(token != null) {

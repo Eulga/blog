@@ -2,9 +2,8 @@ package com.example.bloghw2.global.jwtutil.filter;
 
 import java.io.IOException;
 
-import com.example.bloghw2.global.jwtutil.JwtProvider;
+import com.example.bloghw2.global.jwtutil.JwtUtil;
 import org.springframework.core.annotation.Order;
-import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import com.example.bloghw2.domain.user.entity.User;
@@ -27,7 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 public class AuthFilter implements Filter {
 
     private final UserRepository userRepository;
-    private final JwtProvider jwtProvider;
+    private final JwtUtil jwtUtil;
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
@@ -42,20 +41,20 @@ public class AuthFilter implements Filter {
         } else {
             // 나머지 API 요청은 인증 처리 진행
             // 토큰 확인
-            log.info(httpServletRequest.getHeader(JwtProvider.AUTHORIZATION_HEADER));
+            log.info(httpServletRequest.getHeader(JwtUtil.AUTHORIZATION_HEADER));
 
 //            String tokenValue = jwtUtil.getTokenFromRequest(httpServletRequest);
-            String tokenValue = httpServletRequest.getHeader(JwtProvider.AUTHORIZATION_HEADER);
+            String tokenValue = httpServletRequest.getHeader(JwtUtil.AUTHORIZATION_HEADER);
 
             if (StringUtils.hasText(tokenValue)) { // 토큰이 존재하면 검증 시작
                 // JWT 토큰 substring
-                String token = jwtProvider.substringToken(tokenValue);
+                String token = jwtUtil.substringToken(tokenValue);
 
                 // 토큰 검증
-                jwtProvider.validateToken(token);
+                jwtUtil.validateToken(token);
 
                 // 토큰에서 사용자 정보 가져오기
-                Claims info = jwtProvider.getUserInfoFromToken(token);
+                Claims info = jwtUtil.getUserInfoFromToken(token);
 
                 // jwt 토큰에 subject로 넣어진 유저 네임으로 실제 존재하는 유저인지 확인
                 User user = userRepository.findByUsername(info.getSubject()).orElseThrow(() ->
