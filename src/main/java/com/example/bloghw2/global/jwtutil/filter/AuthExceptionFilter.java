@@ -24,7 +24,7 @@ import lombok.RequiredArgsConstructor;
 @Slf4j(topic = "AuthExceptionFilter")
 @RequiredArgsConstructor
 @Order(1)
-@Component
+//@Component
 public class AuthExceptionFilter extends OncePerRequestFilter {
 
     private final ObjectMapper objectMapper;
