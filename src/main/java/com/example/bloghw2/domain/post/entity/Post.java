@@ -41,6 +41,7 @@ public class Post {
     private LocalDateTime createdDate;
 
     @OneToMany(mappedBy = "post", fetch = LAZY, cascade = CascadeType.ALL)
+    @OrderBy("createdDate desc ")
     private List<Comment> commentList;
 
     @Builder
