@@ -17,7 +17,7 @@ public class PostResponseDTO {
 
     private final String author;
 
-    private final String contents;
+    private final String content;
 
     private final LocalDateTime createdDate;
 
@@ -27,7 +27,7 @@ public class PostResponseDTO {
         this.postId = post.getPostId();
         this.title = post.getTitle();
         this.author = post.getUser().getUsername();
-        this.contents = post.getContents();
+        this.content = post.getContent();
         this.createdDate = post.getCreatedDate();
         if (!(post.getCommentList() == null)) setCommentList(post.getCommentList());
     }

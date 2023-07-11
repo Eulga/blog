@@ -1,15 +1,11 @@
 package com.example.bloghw2.domain.user.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
+@AllArgsConstructor
 public class SignupResponseDTO {
-
-    private final String success;
-    private final int status;
-
-    public SignupResponseDTO(String success, int status) {
-        this.success = success;
-        this.status = status;
-    }
+    private int statusCode;
+    private String message;
 }

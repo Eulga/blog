@@ -30,7 +30,7 @@ public class Post {
     @NotBlank(message = "title input error")
     private String title;
 
-    private String contents;
+    private String content;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_id")
@@ -45,14 +45,14 @@ public class Post {
     private List<Comment> commentList;
 
     @Builder
-    private Post(String title, String contents, User user) {
+    private Post(String title, String content, User user) {
         this.title = title;
-        this.contents = contents;
+        this.content = content;
         this.user = user;
     }
 
-    public void modifyPost(String title, String contents){
+    public void modifyPost(String title, String content){
         this.title = title;
-        this.contents = contents;
+        this.content = content;
     }
 }

@@ -3,11 +3,12 @@ package com.example.bloghw2.domain.comment.controller;
 import com.example.bloghw2.domain.comment.dto.CommentRequestDTO;
 import com.example.bloghw2.domain.comment.dto.CommentResponseDTO;
 import com.example.bloghw2.domain.comment.service.CommentService;
-import com.example.bloghw2.global.jwtutil.LoginUser;
+import com.example.bloghw2.global.security.UserDetailsImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -22,23 +23,24 @@ public class CommentController {
     // 댓글 생성
     @PostMapping("/comments")
     public ResponseEntity<CommentResponseDTO> createComment(@Valid @RequestBody CommentRequestDTO commentRequestDTO,
-                                                            @LoginUser String username) {
-        CommentResponseDTO response = commentService.createComment(commentRequestDTO, username);
+                                                            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+
+        CommentResponseDTO response = commentService.createComment(commentRequestDTO, userDetails.getUsername());
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     // 댓글 수정
     @PutMapping("/comments/{commentId}")
     public ResponseEntity<CommentResponseDTO> modifyComment(@Valid @RequestBody CommentRequestDTO commentRequestDTO,
-                                                            @LoginUser String username, @PathVariable("commentId") Long commentId) {
-        CommentResponseDTO response = commentService.modifyComment(commentId, commentRequestDTO, username);
+                                                            @AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable("commentId") Long commentId) {
+        CommentResponseDTO response = commentService.modifyComment(commentId, commentRequestDTO,  userDetails.getUsername());
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     // 댓글 삭제
     @DeleteMapping("/comments/{commentId}")
-    public ResponseEntity<Map<String, String>> deleteComment(@LoginUser String username, @PathVariable("commentId") Long commentId) {
-        return ResponseEntity.status(HttpStatus.OK).body(commentService.deleteComment(commentId, username));
+    public ResponseEntity<Map<String, String>> deleteComment(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable("commentId") Long commentId) {
+        return ResponseEntity.status(HttpStatus.OK).body(commentService.deleteComment(commentId, userDetails.getUsername()));
     }
 
 

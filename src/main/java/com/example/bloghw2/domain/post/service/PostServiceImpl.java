@@ -36,7 +36,7 @@ public class PostServiceImpl implements PostService {
         );
         Post post = Post.builder()
                 .title(postRequestDTO.getTitle())
-                .contents(postRequestDTO.getContents())
+                .content(postRequestDTO.getContent())
                 .user(user)
                 .build();
         Post savedPost = postRepository.save(post);
@@ -88,7 +88,7 @@ public class PostServiceImpl implements PostService {
             }
         }
         if (validationAuthority(user, post)) {
-            post.modifyPost(postRequestDTO.getTitle(), postRequestDTO.getContents());
+            post.modifyPost(postRequestDTO.getTitle(), postRequestDTO.getContent());
         } else {
             throw new PostPermissionException("Not The User's Post");
         }
