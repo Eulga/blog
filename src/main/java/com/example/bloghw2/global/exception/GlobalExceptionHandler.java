@@ -1,12 +1,14 @@
 package com.example.bloghw2.global.exception;
 
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import com.example.bloghw2.domain.comment.exception.CommentNotFoundException;
 import com.example.bloghw2.domain.comment.exception.CommentPermissionException;
+import com.example.bloghw2.domain.post.exception.PostNotFoundException;
+import com.example.bloghw2.domain.post.exception.PostPermissionException;
 import com.example.bloghw2.domain.user.exception.AdminTokenMismatchException;
+import com.example.bloghw2.domain.user.exception.PasswordMismatchException;
+import com.example.bloghw2.domain.user.exception.UserDuplicationException;
+import com.example.bloghw2.domain.user.exception.UserNotFoundException;
+import com.example.bloghw2.global.exception.dto.ExceptionDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,24 +16,43 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import com.example.bloghw2.global.exception.dto.ExceptionDTO;
-import com.example.bloghw2.domain.post.exception.PostPermissionException;
-import com.example.bloghw2.domain.post.exception.PostNotFoundException;
-import com.example.bloghw2.domain.user.exception.PasswordMismatchException;
-import com.example.bloghw2.domain.user.exception.UserDuplicationException;
-import com.example.bloghw2.domain.user.exception.UserNotFoundException;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 @Slf4j(topic = "GlobalExceptionHandler")
 @RestControllerAdvice
+// Advice <- AOP 구현
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<ExceptionDTO> runtimeExceptionHandler(Exception e){
-        log.error(e.getMessage());
-        Map<String, String> errors = Collections.singletonMap("error","RuntimeException occurred");
-        ExceptionDTO errorResponse = new ExceptionDTO("false",400, errors);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    //Lv5 요구사항
+    @ExceptionHandler({NullPointerException.class})
+    public ResponseEntity<RestApiException> nullPointerExceptionHandler(NullPointerException ex) {
+        //토큰이 필요한 API 요청에서 토큰을 전달하지 않았거나
+        //정상 토큰이 아닐 때는 "토큰이 유효하지 않습니다." 라는 에러메시지와 statusCode: 400을 Client에 반환
+        RestApiException restApiException = new RestApiException("토큰이 유효하지 않습니다.", HttpStatus.BAD_REQUEST.value());
+
+        return new ResponseEntity<>(
+                // HTTP body
+                restApiException,
+                // HTTP status code
+                HttpStatus.BAD_REQUEST
+        );
     }
+    @ExceptionHandler({IllegalArgumentException.class})
+    public ResponseEntity<RestApiException> illegalArgumentExceptionHandler(IllegalArgumentException ex) {
+        //토큰이 있고, 유효한 토큰이지만 사용자가 작성한 게시글/댓글이 아닌 경우에는
+        //“작성자만 삭제/수정할 수 있습니다.”라는 에러메시지와 statusCode: 400을 Client에 반환하기
+        RestApiException restApiException = new RestApiException("작성자만 삭제/수정할 수 있습니다.", HttpStatus.BAD_REQUEST.value());
+        return new ResponseEntity<>(
+                // HTTP body
+                restApiException,
+                // HTTP status code
+                HttpStatus.BAD_REQUEST //400
+        );
+    }
+
 
     // requestDTO 유효성 검사 실패
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -69,8 +90,10 @@ public class GlobalExceptionHandler {
     // 사용자 이름 중복
     @ExceptionHandler(UserDuplicationException.class)
     public ResponseEntity<ExceptionDTO> userDuplicationExceptionHandler(UserDuplicationException e){
+        //DB에 이미 존재하는 username으로 회원가입을 요청한 경우
+        // "중복된 username 입니다." 라는 에러메시지와 statusCode: 400을 Client에 반환하기
         Map<String, String> errors = Collections.singletonMap("error", e.getMessage());
-        ExceptionDTO errorResponse = new ExceptionDTO("false",409, errors);
+        ExceptionDTO errorResponse = new ExceptionDTO("false",400, errors);
         return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
     }
 

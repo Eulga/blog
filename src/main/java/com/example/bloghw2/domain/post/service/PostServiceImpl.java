@@ -11,6 +11,7 @@ import com.example.bloghw2.domain.user.exception.UserNotFoundException;
 import com.example.bloghw2.domain.user.entity.User;
 import com.example.bloghw2.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +27,7 @@ public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
 
+    private final MessageSource messageSource;
 
     // 게시글 생성
     @Transactional
@@ -84,13 +86,13 @@ public class PostServiceImpl implements PostService {
 
         if (!user.getRole().equals(UserRoleEnum.ADMIN)) {
             if (!(post.getUser().getUserId().equals(user.getUserId()))) {
-                throw new PostPermissionException("Not The User's Post");
+                throw new IllegalArgumentException();
             }
         }
         if (validationAuthority(user, post)) {
             post.modifyPost(postRequestDTO.getTitle(), postRequestDTO.getContent());
         } else {
-            throw new PostPermissionException("Not The User's Post");
+            throw new IllegalArgumentException();
         }
 
         PostResponseDTO response = new PostResponseDTO(post);
@@ -110,10 +112,15 @@ public class PostServiceImpl implements PostService {
                 () -> new PostNotFoundException("Not Found Post")
         );
 
+        if (!user.getRole().equals(UserRoleEnum.ADMIN)) {
+            if (!(post.getUser().getUserId().equals(user.getUserId()))) {
+                throw new IllegalArgumentException();
+            }
+        }
         if (validationAuthority(user, post)) {
             postRepository.delete(post);
         } else {
-            throw new PostPermissionException("Not The User's Post");
+            throw new IllegalArgumentException();
         }
 
         return new LinkedHashMap<>() {{

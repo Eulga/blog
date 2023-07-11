@@ -78,11 +78,13 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     protected void unsuccessfulAuthentication(HttpServletRequest request
             , HttpServletResponse response
             , AuthenticationException failed) throws IOException, ServletException {
+        log.info("로그인 실패");
 
+        //로그인 시, 전달된 username과 password 중 맞지 않는 정보가 있다면
+        // "회원을 찾을 수 없습니다."라는 에러메시지와 statusCode: 400을 Client에 반환
         Map<String, Object> data = new LinkedHashMap<>();
-
-        data.put("status",HttpServletResponse.SC_UNAUTHORIZED);
-        data.put("message", failed.getMessage());
+        data.put("status", HttpServletResponse.SC_BAD_REQUEST);
+        data.put("message", "회원을 찾을 수 없습니다.");
 
         ObjectMapper mapper = new ObjectMapper();
         String jsonString = mapper.writeValueAsString(data);
@@ -90,6 +92,5 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         response.getWriter().write(jsonString);
-
     }
 }

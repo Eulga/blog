@@ -15,7 +15,7 @@ public class PostResponseDTO {
 
     private final String title;
 
-    private final String author;
+    private final String username;
 
     private final String content;
 
@@ -26,7 +26,7 @@ public class PostResponseDTO {
     public PostResponseDTO(Post post){
         this.postId = post.getPostId();
         this.title = post.getTitle();
-        this.author = post.getUser().getUsername();
+        this.username = post.getUser().getUsername();
         this.content = post.getContent();
         this.createdDate = post.getCreatedDate();
         if (!(post.getCommentList() == null)) setCommentList(post.getCommentList());

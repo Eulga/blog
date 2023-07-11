@@ -32,14 +32,16 @@ public class CommentController {
     // 댓글 수정
     @PutMapping("/comments/{commentId}")
     public ResponseEntity<CommentResponseDTO> modifyComment(@Valid @RequestBody CommentRequestDTO commentRequestDTO,
-                                                            @AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable("commentId") Long commentId) {
+                                                            @AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                            @PathVariable("commentId") Long commentId) {
         CommentResponseDTO response = commentService.modifyComment(commentId, commentRequestDTO,  userDetails.getUsername());
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     // 댓글 삭제
     @DeleteMapping("/comments/{commentId}")
-    public ResponseEntity<Map<String, String>> deleteComment(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable("commentId") Long commentId) {
+    public ResponseEntity<Map<String, String>> deleteComment(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                             @PathVariable("commentId") Long commentId) {
         return ResponseEntity.status(HttpStatus.OK).body(commentService.deleteComment(commentId, userDetails.getUsername()));
     }
 
