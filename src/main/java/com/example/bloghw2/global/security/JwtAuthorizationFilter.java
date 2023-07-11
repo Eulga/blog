@@ -1,7 +1,9 @@
 package com.example.bloghw2.global.security;
 
+import com.example.bloghw2.global.exception.RestApiException;
 import com.example.bloghw2.global.jwt.JwtUtil;
 import com.example.bloghw2.global.security.UserDetailsServiceImpl;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -40,6 +42,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
             if (!jwtUtil.validateToken(tokenValue)) {
                 log.error("Token Error");
+                createErrorResponse(res, HttpServletResponse.SC_BAD_REQUEST, "토큰이 유효하지 않습니다.");
                 return;
             }
 
@@ -49,11 +52,21 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 setAuthentication(info.getSubject());
             } catch (Exception e) {
                 log.error(e.getMessage());
+                createErrorResponse(res, HttpServletResponse.SC_UNAUTHORIZED, "인증 처리 중 에러 발생");
                 return;
             }
         }
 
         filterChain.doFilter(req, res);
+    }
+
+    private void createErrorResponse(HttpServletResponse res, int status, String message) throws IOException {
+        res.setStatus(status);
+        res.setContentType("application/json");
+
+        RestApiException restApiException = new RestApiException(message, status);
+
+        new ObjectMapper().writeValue(res.getOutputStream(), restApiException);
     }
 
     // 인증 처리
