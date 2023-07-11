@@ -8,6 +8,7 @@ import com.example.bloghw2.domain.user.entity.UserRoleEnum;
 import com.example.bloghw2.domain.user.exception.AdminTokenMismatchException;
 import com.example.bloghw2.domain.user.repository.UserRepository;
 import com.example.bloghw2.domain.user.exception.UserDuplicationException;
+import org.springframework.context.MessageSource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,8 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    //private final MessageSource messageSource;
+
     // ADMIN_TOKEN
     private final String ADMIN_TOKEN = "AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC";
 
@@ -32,7 +35,7 @@ public class UserService {
         // username 중복 확인
         Optional<User> findUser = userRepository.findByUsername(username);
         if (findUser.isPresent()){
-            throw new UserDuplicationException("아이디 중복");
+            throw new UserDuplicationException("중복된 username 입니다.");
         }
 
         // 사용자 ROLE 확인

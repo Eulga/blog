@@ -15,6 +15,7 @@ import com.example.bloghw2.domain.user.exception.UserNotFoundException;
 import com.example.bloghw2.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,12 +26,14 @@ import java.util.Map;
 @Slf4j(topic = "CommentService")
 @RequiredArgsConstructor
 @Service
-@Transactional(readOnly = true)
+//@Transactional(readOnly = true)
 public class CommentServiceImpl implements CommentService {
 
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
+
+    private final MessageSource messageSource;
 
     // 해당 게시글 댓글 조회
     @Override
@@ -76,10 +79,15 @@ public class CommentServiceImpl implements CommentService {
                 () -> new CommentNotFoundException("Not Found Comment")
         );
 
+        if (!user.getRole().equals(UserRoleEnum.ADMIN)) {
+            if (!(comment.getUser().getUserId().equals(user.getUserId()))) {
+                throw new IllegalArgumentException();
+            }
+        }
         if (validationAuthority(user, comment)) {
             comment.modifyComment(commentRequestDTO.getContent());
         } else {
-            throw new CommentPermissionException("Not The User's Comment");
+            throw new IllegalArgumentException();
         }
 
         return new CommentResponseDTO(comment);
@@ -95,11 +103,18 @@ public class CommentServiceImpl implements CommentService {
         Comment comment = commentRepository.findById(commentId).orElseThrow(
                 () -> new CommentNotFoundException("Not Found Comment")
         );
+
+        if (!user.getRole().equals(UserRoleEnum.ADMIN)) {
+            if (!(comment.getUser().getUserId().equals(user.getUserId()))) {
+                throw new IllegalArgumentException();
+            }
+        }
         if (validationAuthority(user, comment)) {
             commentRepository.delete(comment);
         } else {
-            throw new CommentPermissionException("Not The User's Comment");
+            throw new IllegalArgumentException();
         }
+
 
         return new LinkedHashMap<>() {{
             put("success", "true");
