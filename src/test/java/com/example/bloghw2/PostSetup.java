@@ -20,7 +20,7 @@ public class PostSetup {
     public Post savePosts(User user) {
         Post post = Post.builder()
             .title("title1")
-            .contents("contents")
+            .content("content")
             .user(user)
             .build();
         Post savedPost = postRepository.save(post);
