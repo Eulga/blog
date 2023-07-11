@@ -1,5 +1,7 @@
 package com.example.bloghw2.global.config;
 
+import static org.springframework.boot.autoconfigure.security.servlet.PathRequest.*;
+
 import com.example.bloghw2.global.jwt.JwtUtil;
 import com.example.bloghw2.global.security.JwtAuthenticationFilter;
 import com.example.bloghw2.global.security.JwtAuthorizationFilter;
@@ -54,6 +56,8 @@ public class WebSecurityConfig {
         // CSRF 설정
         http.csrf((csrf) -> csrf.disable());
 
+        http.headers(header -> header.frameOptions(option -> option.sameOrigin()));
+
         // 기본 설정인 Session 방식은 사용하지 않고 JWT 방식을 사용하기 위한 설정
         http.sessionManagement((sessionManagement) ->
                 sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -66,6 +70,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/api/user/**").permitAll()
                         .requestMatchers("/api/posts/**").permitAll()
                         .requestMatchers("/api/comments/**").permitAll()
+                        .requestMatchers(toH2Console()).permitAll()
                         .anyRequest().authenticated() // 그 외 요청은 인증 필요
         );
 
