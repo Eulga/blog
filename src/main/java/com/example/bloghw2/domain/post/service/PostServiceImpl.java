@@ -1,8 +1,10 @@
 package com.example.bloghw2.domain.post.service;
 
+import com.example.bloghw2.domain.comment.repository.CommentLikeRepository;
 import com.example.bloghw2.domain.post.entity.Post;
 import com.example.bloghw2.domain.post.exception.PostNotFoundException;
 import com.example.bloghw2.domain.post.exception.PostPermissionException;
+import com.example.bloghw2.domain.post.repository.PostLikeRepository;
 import com.example.bloghw2.domain.post.repository.PostRepository;
 import com.example.bloghw2.domain.post.dto.PostRequestDTO;
 import com.example.bloghw2.domain.post.dto.PostResponseDTO;
@@ -26,6 +28,8 @@ public class PostServiceImpl implements PostService {
 
     private final PostRepository postRepository;
     private final UserRepository userRepository;
+    private final PostLikeRepository postLikeRepository;
+    private final CommentLikeRepository commentLikeRepository;
 
     private final MessageSource messageSource;
 
@@ -54,6 +58,15 @@ public class PostServiceImpl implements PostService {
     public List<PostResponseDTO> getPosts() {
         List<Post> posts = postRepository.findAllByOrderByCreatedDateDesc();
 
+        posts.forEach(post -> {
+            // 게시글 좋아요 수
+            post.setLikeCount(postLikeRepository.countByPostId(post.getId()));
+
+            // 댓글 좋아요 수
+            post.getComments().forEach(comment ->
+                    comment.setLikeCount(commentLikeRepository.countByCommentId(comment.getId())));
+        });
+
         List<PostResponseDTO> response = posts.stream()
                 .map(PostResponseDTO::new)
                 .collect(Collectors.toList());
@@ -67,6 +80,14 @@ public class PostServiceImpl implements PostService {
     public PostResponseDTO getPost(Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new PostNotFoundException("Not Found Post"));
+
+        // 게시글 좋아요 수
+        post.setLikeCount(postLikeRepository.countByPostId(post.getId()));
+
+        // 댓글 좋아요 수
+        post.getComments().forEach(comment ->
+                comment.setLikeCount(commentLikeRepository.countByCommentId(comment.getId())));
+
         PostResponseDTO response = new PostResponseDTO(post);
         return response;
     }
@@ -89,11 +110,19 @@ public class PostServiceImpl implements PostService {
                 throw new IllegalArgumentException();
             }
         }
+
         if (validationAuthority(user, post)) {
             post.modifyPost(postRequestDTO.getTitle(), postRequestDTO.getContent());
         } else {
             throw new IllegalArgumentException();
         }
+
+        // 게시글 좋아요 수
+        post.setLikeCount(postLikeRepository.countByPostId(post.getId()));
+
+        // 댓글 좋아요 수
+        post.getComments().forEach(comment ->
+                comment.setLikeCount(commentLikeRepository.countByCommentId(comment.getId())));
 
         PostResponseDTO response = new PostResponseDTO(post);
         return response;

@@ -3,10 +3,7 @@ package com.example.bloghw2.domain.comment.entity;
 import com.example.bloghw2.domain.post.entity.Post;
 import com.example.bloghw2.domain.user.entity.User;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -37,6 +34,15 @@ public class Comment {
     @Column(updatable = false)
     @CreatedDate
     private LocalDateTime createdDate;
+
+    @Transient
+    private int likeCount;
+    public int getLikeCount() {
+        return likeCount;
+    }
+    public void setLikeCount(int likeCount) {
+        this.likeCount = likeCount;
+    }
 
     @Builder
     private Comment(Post post, User user, String content) {

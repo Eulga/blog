@@ -12,10 +12,12 @@ public class CommentResponseDTO {
     private final LocalDateTime createDate;
     private final String username;
 
+    private int likeCount;
     public CommentResponseDTO(Comment comment) {
         this.commentId = comment.getId();
         this.content = comment.getContent();
         this.createDate = comment.getCreatedDate();
         this.username = comment.getUser().getUsername();
+        this.likeCount = comment.getLikeCount();
     }
 }

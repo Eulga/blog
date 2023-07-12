@@ -23,6 +23,8 @@ public class PostResponseDTO {
 
     private List<CommentResponseDTO> commentList;
 
+    private int likeCount;
+
     public PostResponseDTO(Post post){
         this.postId = post.getId();
         this.title = post.getTitle();
@@ -30,6 +32,7 @@ public class PostResponseDTO {
         this.content = post.getContent();
         this.createdDate = post.getCreatedDate();
         if (!(post.getCommentList() == null)) setCommentList(post.getCommentList());
+        this.likeCount = post.getLikeCount();
     }
 
     public void setCommentList(List<Comment> commentList) {
