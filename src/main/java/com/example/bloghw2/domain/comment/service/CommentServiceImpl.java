@@ -5,6 +5,7 @@ import com.example.bloghw2.domain.comment.dto.CommentResponseDTO;
 import com.example.bloghw2.domain.comment.entity.Comment;
 import com.example.bloghw2.domain.comment.exception.CommentNotFoundException;
 import com.example.bloghw2.domain.comment.exception.CommentPermissionException;
+import com.example.bloghw2.domain.comment.repository.CommentLikeRepository;
 import com.example.bloghw2.domain.comment.repository.CommentRepository;
 import com.example.bloghw2.domain.post.entity.Post;
 import com.example.bloghw2.domain.post.exception.PostNotFoundException;
@@ -32,6 +33,8 @@ public class CommentServiceImpl implements CommentService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
+
+    private final CommentLikeRepository commentLikeRepository;
 
     private final MessageSource messageSource;
 
@@ -80,7 +83,7 @@ public class CommentServiceImpl implements CommentService {
         );
 
         if (!user.getRole().equals(UserRoleEnum.ADMIN)) {
-            if (!(comment.getUser().getUserId().equals(user.getUserId()))) {
+            if (!(comment.getUser().getId().equals(user.getId()))) {
                 throw new IllegalArgumentException();
             }
         }
@@ -89,6 +92,9 @@ public class CommentServiceImpl implements CommentService {
         } else {
             throw new IllegalArgumentException();
         }
+
+        // 댓글 좋아요 수
+        comment.setLikeCount(commentLikeRepository.countByCommentId(comment.getId()));
 
         return new CommentResponseDTO(comment);
     }
@@ -105,7 +111,7 @@ public class CommentServiceImpl implements CommentService {
         );
 
         if (!user.getRole().equals(UserRoleEnum.ADMIN)) {
-            if (!(comment.getUser().getUserId().equals(user.getUserId()))) {
+            if (!(comment.getUser().getId().equals(user.getId()))) {
                 throw new IllegalArgumentException();
             }
         }

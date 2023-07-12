@@ -26,13 +26,11 @@ import java.util.Map;
 // Advice <- AOP 구현
 public class GlobalExceptionHandler {
 
-    //Lv5 요구사항
-    @ExceptionHandler({NullPointerException.class})
+    @ExceptionHandler(NullPointerException.class)
     public ResponseEntity<RestApiException> nullPointerExceptionHandler(NullPointerException ex) {
-        //토큰이 필요한 API 요청에서 토큰을 전달하지 않았거나
-        //정상 토큰이 아닐 때는 "토큰이 유효하지 않습니다." 라는 에러메시지와 statusCode: 400을 Client에 반환
         RestApiException restApiException = new RestApiException("토큰이 유효하지 않습니다.", HttpStatus.BAD_REQUEST.value());
-
+        // 여기서는 토큰이 필요한 API 요청에서 토큰을 전달하지 않은 경우만 처리
+        // 토큰은 있으나 유효하지 않은 토큰인 경우는 JwtAuthorizationFilter 에서 처리
         return new ResponseEntity<>(
                 // HTTP body
                 restApiException,
@@ -40,11 +38,11 @@ public class GlobalExceptionHandler {
                 HttpStatus.BAD_REQUEST
         );
     }
-    @ExceptionHandler({IllegalArgumentException.class})
+    @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<RestApiException> illegalArgumentExceptionHandler(IllegalArgumentException ex) {
         //토큰이 있고, 유효한 토큰이지만 사용자가 작성한 게시글/댓글이 아닌 경우에는
-        //“작성자만 삭제/수정할 수 있습니다.”라는 에러메시지와 statusCode: 400을 Client에 반환하기
-        RestApiException restApiException = new RestApiException("작성자만 삭제/수정할 수 있습니다.", HttpStatus.BAD_REQUEST.value());
+        //“작성자만 삭제 또는 수정할 수 있습니다.”라는 에러메시지와 statusCode: 400을 Client에 반환하기
+        RestApiException restApiException = new RestApiException("작성자만 삭제 또는 수정할 수 있습니다.", HttpStatus.BAD_REQUEST.value());
         return new ResponseEntity<>(
                 // HTTP body
                 restApiException,

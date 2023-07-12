@@ -60,6 +60,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         filterChain.doFilter(req, res);
     }
 
+    // 클라이언트에게 에러 메시지 전달
     private void createErrorResponse(HttpServletResponse res, int status, String message) throws IOException {
         res.setStatus(status);
         res.setContentType("application/json");

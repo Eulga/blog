@@ -12,6 +12,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import static jakarta.persistence.FetchType.LAZY;
@@ -25,11 +26,13 @@ public class Post {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long postId;
+    private Long id;
 
     @NotBlank(message = "title input error")
     private String title;
 
+    @Lob
+    @Column(columnDefinition = "text")
     private String content;
 
     @ManyToOne(fetch = LAZY)
@@ -43,6 +46,18 @@ public class Post {
     @OneToMany(mappedBy = "post", fetch = LAZY, cascade = CascadeType.ALL)
     @OrderBy("createdDate desc ")
     private List<Comment> commentList;
+
+    @Transient
+    private int likeCount;
+    public int getLikeCount() {
+        return likeCount;
+    }
+    public void setLikeCount(int likeCount) {
+        this.likeCount = likeCount;
+    }
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
 
     @Builder
     private Post(String title, String content, User user) {
