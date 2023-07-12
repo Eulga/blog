@@ -3,8 +3,7 @@
 김재익, 추광현
 
 # ERD
-
-![image](https://github.com/Eulga/blog-level3/assets/63146118/a1991fa9-b678-4b99-8184-1789b35a0528)
+![image](https://github.com/Eulga/blog/assets/63146118/eef892da-58af-47aa-bd70-f4642f11d5fd)
 
 # api 명세서
 https://parallel-lightning-940.notion.site/f557e8dca9d444ca8ecd88a7e1b631a7?v=aaeaebe5dc9a49fb927efb9459c6d8ad&pvs=4
