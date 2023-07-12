@@ -86,13 +86,13 @@ public class PostServiceImpl implements PostService {
 
         if (!user.getRole().equals(UserRoleEnum.ADMIN)) {
             if (!(post.getUser().getId().equals(user.getId()))) {
-                throw new PostPermissionException("작성자만 삭제 또는 수정할 수 있습니다.");
+                throw new IllegalArgumentException();
             }
         }
         if (validationAuthority(user, post)) {
             post.modifyPost(postRequestDTO.getTitle(), postRequestDTO.getContent());
         } else {
-            throw new PostPermissionException("작성자만 삭제 또는 수정할 수 있습니다.");
+            throw new IllegalArgumentException();
         }
 
         PostResponseDTO response = new PostResponseDTO(post);
