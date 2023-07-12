@@ -25,11 +25,13 @@ public class Post {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long postId;
+    private Long id;
 
     @NotBlank(message = "title input error")
     private String title;
 
+    @Lob
+    @Column(columnDefinition = "text")
     private String content;
 
     @ManyToOne(fetch = LAZY)

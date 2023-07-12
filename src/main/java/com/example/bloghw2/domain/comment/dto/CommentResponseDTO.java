@@ -13,7 +13,7 @@ public class CommentResponseDTO {
     private final String username;
 
     public CommentResponseDTO(Comment comment) {
-        this.commentId = comment.getCommentId();
+        this.commentId = comment.getId();
         this.content = comment.getContent();
         this.createDate = comment.getCreatedDate();
         this.username = comment.getUser().getUsername();

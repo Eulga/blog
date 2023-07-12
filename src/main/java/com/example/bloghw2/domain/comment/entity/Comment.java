@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 public class Comment {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long commentId;
+    private Long id;
 
     @JoinColumn(name = "user_id")
     @ManyToOne(fetch = FetchType.LAZY)
@@ -30,6 +30,8 @@ public class Comment {
     @ManyToOne(fetch = FetchType.LAZY)
     private Post post;
 
+    @Lob
+    @Column(columnDefinition = "text")
     private String content;
 
     @Column(updatable = false)

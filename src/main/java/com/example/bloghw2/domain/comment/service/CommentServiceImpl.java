@@ -80,7 +80,7 @@ public class CommentServiceImpl implements CommentService {
         );
 
         if (!user.getRole().equals(UserRoleEnum.ADMIN)) {
-            if (!(comment.getUser().getUserId().equals(user.getUserId()))) {
+            if (!(comment.getUser().getId().equals(user.getId()))) {
                 throw new IllegalArgumentException();
             }
         }
@@ -105,7 +105,7 @@ public class CommentServiceImpl implements CommentService {
         );
 
         if (!user.getRole().equals(UserRoleEnum.ADMIN)) {
-            if (!(comment.getUser().getUserId().equals(user.getUserId()))) {
+            if (!(comment.getUser().getId().equals(user.getId()))) {
                 throw new IllegalArgumentException();
             }
         }

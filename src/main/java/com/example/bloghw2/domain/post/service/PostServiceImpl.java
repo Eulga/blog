@@ -85,14 +85,14 @@ public class PostServiceImpl implements PostService {
         );
 
         if (!user.getRole().equals(UserRoleEnum.ADMIN)) {
-            if (!(post.getUser().getUserId().equals(user.getUserId()))) {
-                throw new IllegalArgumentException();
+            if (!(post.getUser().getId().equals(user.getId()))) {
+                throw new PostPermissionException("작성자만 삭제 또는 수정할 수 있습니다.");
             }
         }
         if (validationAuthority(user, post)) {
             post.modifyPost(postRequestDTO.getTitle(), postRequestDTO.getContent());
         } else {
-            throw new IllegalArgumentException();
+            throw new PostPermissionException("작성자만 삭제 또는 수정할 수 있습니다.");
         }
 
         PostResponseDTO response = new PostResponseDTO(post);
@@ -113,7 +113,7 @@ public class PostServiceImpl implements PostService {
         );
 
         if (!user.getRole().equals(UserRoleEnum.ADMIN)) {
-            if (!(post.getUser().getUserId().equals(user.getUserId()))) {
+            if (!(post.getUser().getId().equals(user.getId()))) {
                 throw new IllegalArgumentException();
             }
         }
@@ -132,7 +132,7 @@ public class PostServiceImpl implements PostService {
     // 수정, 삭제시 권한 확인
     private boolean validationAuthority(User user, Post post) {
         if (!user.getRole().equals(UserRoleEnum.ADMIN)) {
-            if (!(post.getUser().getUserId().equals(user.getUserId()))) {
+            if (!(post.getUser().getId().equals(user.getId()))) {
                 return false;
             }
         }
