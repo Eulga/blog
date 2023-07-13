@@ -1,5 +1,6 @@
 package com.example.blog.domain.user.controller;
 
+import com.example.blog.domain.user.dto.LoginRequestDTO;
 import com.example.blog.domain.user.dto.SignupRequestDTO;
 import com.example.blog.domain.user.dto.SignupResponseDTO;
 import com.example.blog.domain.user.service.UserService;
@@ -25,11 +26,9 @@ public class UserController {
         return userService.signup(signupRequestDto);
     }
 
-    // 로그인은 global - jwt - JwtAuthenticationFilter 에서 처리
-    /*
-        public JwtAuthenticationFilter(JwtUtil jwtUtil) {
-            this.jwtUtil = jwtUtil;
-            setFilterProcessesUrl("/api/user/login");
-        }
-     */
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginRequestDTO loginRequestDTO) {
+        // 컨트롤러 도달하기 전에 JwtAuthenticationFilter가 가로챔 <- 로그인시 JWT 인증은 시큐리티가 하도록 함
+        return ResponseEntity.ok().build();
+    }
 }
