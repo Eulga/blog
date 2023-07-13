@@ -47,6 +47,9 @@ public class Post {
     @OrderBy("createdDate desc ")
     private List<Comment> commentList;
 
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
+
     @Transient
     private int likeCount;
     public int getLikeCount() {
@@ -55,9 +58,8 @@ public class Post {
     public void setLikeCount(int likeCount) {
         this.likeCount = likeCount;
     }
-
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Comment> comments = new ArrayList<>();
+    private List<PostLike> likes = new ArrayList<>();
 
     @Builder
     private Post(String title, String content, User user) {
