@@ -26,7 +26,7 @@ public class UserController {
         return userService.signup(signupRequestDto);
     }
 
-    @PostMapping("/login")
+    @PostMapping("/user/login")
     public ResponseEntity<?> login(@RequestBody LoginRequestDTO loginRequestDTO) {
         // 컨트롤러 도달하기 전에 JwtAuthenticationFilter가 가로챔 <- 로그인시 JWT 인증은 시큐리티가 하도록 함
         return ResponseEntity.ok().build();
